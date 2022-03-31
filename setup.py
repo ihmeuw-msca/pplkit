@@ -13,7 +13,12 @@ if __name__ == "__main__":
     with (base_dir / "README.rst").open() as f:
         long_description = f.read()
 
-    install_requirements = []
+    install_requirements = [
+        "dill",
+        "pyyaml",
+        "pandas",
+        "pyarrow",
+    ]
 
     test_requirements = []
 
