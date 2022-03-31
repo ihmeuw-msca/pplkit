@@ -29,10 +29,10 @@ class DataInterface:
         fpath = self.get_fpath(*fparts, key=key)
         return self.data_io_dict[fpath.suffix].load(fpath, **options)
 
-    def dump(self, obj: Any, *fparts: str, key: str = "", **options):
+    def dump(self, obj: Any, *fparts: str,
+             key: str = "", mkdir: bool = True, **options):
         fpath = self.get_fpath(*fparts, key=key)
-        fpath.parent.mkdir(parents=True, exist_ok=True)
-        self.data_io_dict[fpath.suffix].dump(obj, fpath, **options)
+        self.data_io_dict[fpath.suffix].dump(obj, fpath, mkdir=mkdir, **options)
 
     def __repr__(self) -> str:
         expr = f"{type(self).__name__}(\n"
