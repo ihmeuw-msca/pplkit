@@ -2,7 +2,7 @@
 Data IO
 =======
 
-Data classes that in charges of reading and writing data with different formats.
+Data classes that in charges of reading and writing data with different types.
 """
 import json
 from abc import ABC, abstractmethod
@@ -15,6 +15,18 @@ import yaml
 
 
 class DataIO(ABC):
+    """Bridge class the unify input and output for different data types.
+
+    Attributes
+    ----------
+    fextns
+        The file extensions. When loading a file, it will check if the file
+        extension matches.
+    dtypes
+        The data types. When dumping the data, it will check if the data type
+        matches.
+
+    """
 
     fextns: Tuple[str] = ("",)
     dtypes: Tuple[Type] = (object,)
@@ -28,12 +40,52 @@ class DataIO(ABC):
         pass
 
     def load(self, fpath: str | Path, **options) -> Any:
+        """Load data from given path.
+
+        Parameters
+        ----------
+        fpath
+            Provided file path.
+        **options
+            Extra arguments for the load function.
+
+        Raises
+        ------
+        ValueError
+            Raised when the file extension doesn't match.
+
+        Returns
+        -------
+        Any
+            Data loaded from the given path.
+
+        """
         fpath = Path(fpath)
         if fpath.suffix not in self.fextns:
             raise ValueError(f"File extension must be in {self.fextns}.")
         return self._load(fpath, **options)
 
     def dump(self, obj: Any, fpath: str | Path, mkdir: bool = True, **options):
+        """Dump data to given path.
+
+        Parameters
+        ----------
+        obj
+            Provided data object.
+        fpath
+            Provided file path.
+        mkdir
+            If true, it will automatically create the parent directory. Default
+            to be true.
+        **options
+            Extra arguments for the dump function.
+
+        Raises
+        ------
+        TypeError
+            Raised when the given data object type doesn't match.
+
+        """
         fpath = Path(fpath)
         if not isinstance(obj, self.dtypes):
             raise TypeError(f"Data must be an instance of {self.dtypes}.")
