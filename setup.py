@@ -20,7 +20,9 @@ if __name__ == "__main__":
         "pyarrow",
     ]
 
-    test_requirements = []
+    test_requirements = [
+        "pytest",
+    ]
 
     doc_requirements = []
 
