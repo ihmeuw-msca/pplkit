@@ -1,9 +1,3 @@
-"""
-Data IO
-=======
-
-Data classes that in charges of reading and writing data with different types.
-"""
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -17,19 +11,18 @@ import yaml
 class DataIO(ABC):
     """Bridge class the unify input and output for different data types.
 
-    Attributes
-    ----------
-    fextns
-        The file extensions. When loading a file, it will check if the file
-        extension matches.
-    dtypes
-        The data types. When dumping the data, it will check if the data type
-        matches.
-
     """
 
     fextns: Tuple[str] = ("",)
+    """The file extensions. When loading a file, it will be used to check if
+    the file extension matches.
+
+    """
     dtypes: Tuple[Type] = (object,)
+    """The data types. When dumping the data, it will be used to check if the
+    data type matches.
+
+    """
 
     @abstractmethod
     def _load(self, fpath: Path, **options) -> Any:
@@ -46,7 +39,7 @@ class DataIO(ABC):
         ----------
         fpath
             Provided file path.
-        **options
+        options
             Extra arguments for the load function.
 
         Raises
@@ -77,7 +70,7 @@ class DataIO(ABC):
         mkdir
             If true, it will automatically create the parent directory. Default
             to be true.
-        **options
+        options
             Extra arguments for the dump function.
 
         Raises

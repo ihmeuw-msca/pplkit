@@ -24,7 +24,11 @@ if __name__ == "__main__":
         "pytest",
     ]
 
-    doc_requirements = []
+    doc_requirements = [
+        "sphinx",
+        "sphinx-autodoc-typehints",
+        "furo",
+    ]
 
     setup(
         name=about["__title__"],

@@ -1,9 +1,3 @@
-"""
-Data Interface
-==============
-
-Manage the data system and provide port for loading and writing files.
-"""
 from functools import partial
 from pathlib import Path
 from typing import Any, Dict
@@ -15,15 +9,9 @@ class DataInterface:
     """Data interface that store important directories and automatically read
     and write data to the stored directories based on their data types.
 
-    Attributes
-    ----------
-    data_io_dict
-        A dictionary that maps the file extensions to the corresponding data io
-        class. This is a module level variable from the data.io module.
-
     Parameters
     ----------
-    **dirs
+    dirs
         Directories to manage with directory's name as the name of the keyword
         argument's name and directory's path as the value of the keyword
         argument's value.
@@ -31,6 +19,10 @@ class DataInterface:
     """
 
     data_io_dict: Dict[str, DataIO] = data_io_dict
+    """A dictionary that maps the file extensions to the corresponding data io
+    class. This is a module level variable from the :py:mod:`pplkit.data.io`
+    module.
+    """
 
     def __init__(self, **dirs: str | Path):
         for key, value in dirs.items():
@@ -45,7 +37,7 @@ class DataInterface:
 
         Parameters
         ----------
-        *fparts
+        fparts
             Sub-parts of the directory, including the subdirectories or the
             file name.
         key
@@ -59,12 +51,12 @@ class DataInterface:
 
         Parameters
         ----------
-        *fparts
+        fparts
             Sub-parts of the directory, including the subdirectories or the
             file name.
         key
             The name of the directory stored in the class.
-        **options
+        options
             Extra arguments for the load function.
 
         """
@@ -79,7 +71,7 @@ class DataInterface:
         ----------
         obj
             Provided data object.
-        *fparts
+        fparts
             Sub-parts of the directory, including the subdirectories or the
             file name.
         key
@@ -87,7 +79,7 @@ class DataInterface:
         mkdir
             If true, it will automatically create the parent directory. Default
             to be true.
-        **options
+        options
             Extra arguments for the dump function.
 
         """
