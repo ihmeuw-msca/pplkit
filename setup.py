@@ -13,11 +13,22 @@ if __name__ == "__main__":
     with (base_dir / "README.rst").open() as f:
         long_description = f.read()
 
-    install_requirements = []
+    install_requirements = [
+        "dill",
+        "pyyaml",
+        "pandas",
+        "pyarrow",
+    ]
 
-    test_requirements = []
+    test_requirements = [
+        "pytest",
+    ]
 
-    doc_requirements = []
+    doc_requirements = [
+        "sphinx",
+        "sphinx-autodoc-typehints",
+        "furo",
+    ]
 
     setup(
         name=about["__title__"],
