@@ -9,7 +9,7 @@ import yaml
 
 
 class DataIO(ABC):
-    """Bridge class the unify input and output for different data types.
+    """Bridge class that unifies the file I/O for different data types.
 
     """
 
@@ -68,8 +68,8 @@ class DataIO(ABC):
         fpath
             Provided file path.
         mkdir
-            If true, it will automatically create the parent directory. Default
-            to be true.
+            If true, it will automatically create the parent directory. The
+            default is true.
         options
             Extra arguments for the dump function.
 
@@ -160,15 +160,27 @@ class JSONIO(DataIO):
             json.dump(obj, f, **options)
 
 
-data_io_instances = [
+data_io_instances: List[DataIO] = [
     CSVIO(),
     YAMLIO(),
     PickleIO(),
     ParquetIO(),
     JSONIO(),
 ]
+"""Instances of all the data ios. These are singletons and module variables.
+
+:meta hide-value:
+
+"""
 
 
-data_io_dict = {}
-for data_io in data_io_instances:
-    data_io_dict.update({fextn: data_io for fextn in data_io.fextns})
+data_io_dict: Dict[str, DataIO] = {
+    fextn: data_io
+    for data_io in data_io_instances for fextn in data_io.fextns
+}
+"""Instances of data ios, organized in a dictionary with key as the file
+extensions for each :py:class:`DataIO` class.
+
+:meta hide-value:
+
+"""

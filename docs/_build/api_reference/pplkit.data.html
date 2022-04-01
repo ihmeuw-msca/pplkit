@@ -217,7 +217,7 @@
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">DataIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#DataIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.DataIO" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
-<p>Bridge class the unify input and output for different data types.</p>
+<p>Bridge class that unifies the file I/O for different data types.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO.fextns">
 <span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('',)</span></em><a class="headerlink" href="#pplkit.data.io.DataIO.fextns" title="Permalink to this definition">#</a></dt>
@@ -261,8 +261,8 @@ data type matches.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>Any</em>) – Provided data object.</p></li>
 <li><p><strong>fpath</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Provided file path.</p></li>
-<li><p><strong>mkdir</strong> (<em>bool</em>) – If true, it will automatically create the parent directory. Default
-to be true.</p></li>
+<li><p><strong>mkdir</strong> (<em>bool</em>) – If true, it will automatically create the parent directory. The
+default is true.</p></li>
 <li><p><strong>options</strong> – Extra arguments for the dump function.</p></li>
 </ul>
 </dd>
@@ -351,6 +351,21 @@ the file extension matches.</p>
 data type matches.</p>
 </dd></dl>
 </dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="pplkit.data.io.data_io_instances">
+<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">data_io_instances</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.io.data_io_instances" title="Permalink to this definition">#</a></dt>
+<dd><p>Instances of all the data ios. These are singletons and module variables.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="pplkit.data.io.data_io_dict">
+<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">data_io_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.io.data_io_dict" title="Permalink to this definition">#</a></dt>
+<dd><p>Instances of data ios, organized in a dictionary with key as the file
+extensions for each <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a> class.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
 </section>
 <section id="module-pplkit.data.interface">
 <span id="pplkit-data-interface"></span><h2>pplkit.data.interface<a class="headerlink" href="#module-pplkit.data.interface" title="Permalink to this headline">#</a></h2>
@@ -362,17 +377,19 @@ data type matches.</p>
 and write data to the stored directories based on their data types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dirs</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Directories to manage with directory’s name as the name of the keyword
+<dd class="field-odd"><p><strong>dirs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em> | </em><em>pathlib.Path</em><em>]</em>) – Directories to manage with directory’s name as the name of the keyword
 argument’s name and directory’s path as the value of the keyword
 argument’s value.</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.data_io_dict">
-<span class="sig-name descname"><span class="pre">data_io_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'.csv':</span> <span class="pre">CSVIO(fextns=('.csv',)),</span> <span class="pre">'.json':</span> <span class="pre">JSONIO(fextns=('.json',)),</span> <span class="pre">'.parquet':</span> <span class="pre">ParquetIO(fextns=('.parquet',)),</span> <span class="pre">'.pickle':</span> <span class="pre">PickleIO(fextns=('.pkl',</span> <span class="pre">'.pickle')),</span> <span class="pre">'.pkl':</span> <span class="pre">PickleIO(fextns=('.pkl',</span> <span class="pre">'.pickle')),</span> <span class="pre">'.yaml':</span> <span class="pre">YAMLIO(fextns=('.yml',</span> <span class="pre">'.yaml')),</span> <span class="pre">'.yml':</span> <span class="pre">YAMLIO(fextns=('.yml',</span> <span class="pre">'.yaml'))}</span></em><a class="headerlink" href="#pplkit.data.interface.DataInterface.data_io_dict" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">data_io_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.interface.DataInterface.data_io_dict" title="Permalink to this definition">#</a></dt>
 <dd><p>A dictionary that maps the file extensions to the corresponding data io
-class. This is a module level variable from the <a class="reference internal" href="#module-pplkit.data.io" title="pplkit.data.io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pplkit.data.io</span></code></a>
-module.</p>
+class. This is a module-level variable from
+<a class="reference internal" href="#pplkit.data.io.data_io_dict" title="pplkit.data.io.data_io_dict"><code class="xref py py-data docutils literal notranslate"><span class="pre">pplkit.data.io.data_io_dict</span></code></a>.</p>
+<dl class="field-list simple">
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.get_fpath">
@@ -382,8 +399,7 @@ under the directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fparts</strong> (<em>str</em>) – Sub-parts of the directory, including the subdirectories or the
-file name.</p></li>
+<li><p><strong>fparts</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – Subdirectories or the file name.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The name of the directory stored in the class.</p></li>
 </ul>
 </dd>
@@ -399,14 +415,16 @@ file name.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fparts</strong> (<em>str</em>) – Sub-parts of the directory, including the subdirectories or the
-file name.</p></li>
+<li><p><strong>fparts</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – Subdirectories or the file name.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The name of the directory stored in the class.</p></li>
-<li><p><strong>options</strong> – Extra arguments for the load function.</p></li>
+<li><p><strong>options</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Extra arguments for the load function.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Any</em></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data loaded from the given path.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -418,12 +436,11 @@ file name.</p></li>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>Any</em>) – Provided data object.</p></li>
-<li><p><strong>fparts</strong> (<em>str</em>) – Sub-parts of the directory, including the subdirectories or the
-file name.</p></li>
+<li><p><strong>fparts</strong> (<em>str</em>) – Subdirectories or the file name.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The name of the directory stored in the class.</p></li>
-<li><p><strong>mkdir</strong> (<em>bool</em>) – If true, it will automatically create the parent directory. Default
-to be true.</p></li>
-<li><p><strong>options</strong> – Extra arguments for the dump function.</p></li>
+<li><p><strong>mkdir</strong> (<em>bool</em>) – If true, it will automatically create the parent directory. The
+default is true.</p></li>
+<li><p><strong>options</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Extra arguments for the dump function.</p></li>
 </ul>
 </dd>
 </dl>

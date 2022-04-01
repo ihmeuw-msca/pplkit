@@ -1,6 +1,6 @@
 from functools import partial
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 from pplkit.data.io import DataIO, data_io_dict
 
@@ -20,51 +20,58 @@ class DataInterface:
 
     data_io_dict: Dict[str, DataIO] = data_io_dict
     """A dictionary that maps the file extensions to the corresponding data io
-    class. This is a module level variable from the :py:mod:`pplkit.data.io`
-    module.
+    class. This is a module-level variable from
+    :py:data:`pplkit.data.io.data_io_dict`.
+
+    :meta hide-value:
+
     """
 
-    def __init__(self, **dirs: str | Path):
+    def __init__(self, **dirs: Dict[str, str | Path]):
         for key, value in dirs.items():
             setattr(self, key, Path(value))
             setattr(self, f"load_{key}", partial(self.load, key=key))
             setattr(self, f"dump_{key}", partial(self.dump, key=key))
         self.keys = list(dirs.keys())
 
-    def get_fpath(self, *fparts: str, key: str = "") -> Path:
+    def get_fpath(self, *fparts: Tuple[str, ...], key: str = "") -> Path:
         """Get the file path from the name of the directory and the sub-parts
         under the directory.
 
         Parameters
         ----------
         fparts
-            Sub-parts of the directory, including the subdirectories or the
-            file name.
+            Subdirectories or the file name.
         key
             The name of the directory stored in the class.
 
         """
         return getattr(self, key, Path(".")) / "/".join(map(str, fparts))
 
-    def load(self, *fparts: str, key: str = "", **options) -> Any:
+    def load(self, *fparts: Tuple[str, ...], key: str = "",
+             **options: Dict[str, Any]) -> Any:
         """Load data from given directory.
 
         Parameters
         ----------
         fparts
-            Sub-parts of the directory, including the subdirectories or the
-            file name.
+            Subdirectories or the file name.
         key
             The name of the directory stored in the class.
         options
             Extra arguments for the load function.
 
+        Returns
+        -------
+        Any
+            Data loaded from the given path.
+
         """
         fpath = self.get_fpath(*fparts, key=key)
         return self.data_io_dict[fpath.suffix].load(fpath, **options)
 
-    def dump(self, obj: Any, *fparts: str,
-             key: str = "", mkdir: bool = True, **options):
+    def dump(self, obj: Any, *fparts: str, key: str = "",
+             mkdir: bool = True, **options: Dict[str, Any]):
         """Dump data to the given directory.
 
         Parameters
@@ -72,13 +79,12 @@ class DataInterface:
         obj
             Provided data object.
         fparts
-            Sub-parts of the directory, including the subdirectories or the
-            file name.
+            Subdirectories or the file name.
         key
             The name of the directory stored in the class.
         mkdir
-            If true, it will automatically create the parent directory. Default
-            to be true.
+            If true, it will automatically create the parent directory. The
+            default is true.
         options
             Extra arguments for the dump function.
 

@@ -211,7 +211,7 @@
           <h1>Source code for pplkit.data.interface</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">from</span> <span class="nn">pplkit.data.io</span> <span class="kn">import</span> <span class="n">DataIO</span><span class="p">,</span> <span class="n">data_io_dict</span>
 
@@ -231,51 +231,58 @@
 
     <span class="n">data_io_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_io_dict</span>
     <span class="sd">"""A dictionary that maps the file extensions to the corresponding data io</span>
-<span class="sd">    class. This is a module level variable from the :py:mod:`pplkit.data.io`</span>
-<span class="sd">    module.</span>
+<span class="sd">    class. This is a module-level variable from</span>
+<span class="sd">    :py:data:`pplkit.data.io.data_io_dict`.</span>
+
+<span class="sd">    :meta hide-value:</span>
+
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">dirs</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">dirs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dirs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"load_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"dump_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dirs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-<div class="viewcode-block" id="DataInterface.get_fpath"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.get_fpath">[docs]</a>    <span class="k">def</span> <span class="nf">get_fpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<div class="viewcode-block" id="DataInterface.get_fpath"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.get_fpath">[docs]</a>    <span class="k">def</span> <span class="nf">get_fpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">"""Get the file path from the name of the directory and the sub-parts</span>
 <span class="sd">        under the directory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fparts</span>
-<span class="sd">            Sub-parts of the directory, including the subdirectories or the</span>
-<span class="sd">            file name.</span>
+<span class="sd">            Subdirectories or the file name.</span>
 <span class="sd">        key</span>
 <span class="sd">            The name of the directory stored in the class.</span>
 
 <span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">))</span> <span class="o">/</span> <span class="s2">"/"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">fparts</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="DataInterface.load"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<div class="viewcode-block" id="DataInterface.load"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+             <span class="o">**</span><span class="n">options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="sd">"""Load data from given directory.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        fparts</span>
-<span class="sd">            Sub-parts of the directory, including the subdirectories or the</span>
-<span class="sd">            file name.</span>
+<span class="sd">            Subdirectories or the file name.</span>
 <span class="sd">        key</span>
 <span class="sd">            The name of the directory stored in the class.</span>
 <span class="sd">        options</span>
 <span class="sd">            Extra arguments for the load function.</span>
 
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Data loaded from the given path.</span>
+
 <span class="sd">        """</span>
         <span class="n">fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fpath</span><span class="p">(</span><span class="o">*</span><span class="n">fparts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_io_dict</span><span class="p">[</span><span class="n">fpath</span><span class="o">.</span><span class="n">suffix</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="DataInterface.dump"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-             <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">mkdir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+<div class="viewcode-block" id="DataInterface.dump"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+             <span class="n">mkdir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
         <span class="sd">"""Dump data to the given directory.</span>
 
 <span class="sd">        Parameters</span>
@@ -283,13 +290,12 @@
 <span class="sd">        obj</span>
 <span class="sd">            Provided data object.</span>
 <span class="sd">        fparts</span>
-<span class="sd">            Sub-parts of the directory, including the subdirectories or the</span>
-<span class="sd">            file name.</span>
+<span class="sd">            Subdirectories or the file name.</span>
 <span class="sd">        key</span>
 <span class="sd">            The name of the directory stored in the class.</span>
 <span class="sd">        mkdir</span>
-<span class="sd">            If true, it will automatically create the parent directory. Default</span>
-<span class="sd">            to be true.</span>
+<span class="sd">            If true, it will automatically create the parent directory. The</span>
+<span class="sd">            default is true.</span>
 <span class="sd">        options</span>
 <span class="sd">            Extra arguments for the dump function.</span>
 
