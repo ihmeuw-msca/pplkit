@@ -213,7 +213,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">pplkit.data.io</span> <span class="kn">import</span> <span class="n">DataIO</span><span class="p">,</span> <span class="n">data_io_dict</span>
+<span class="kn">from</span> <span class="nn">pplkit.data.io</span> <span class="kn">import</span> <span class="n">DataIO</span><span class="p">,</span> <span class="n">dataio_dict</span>
 
 
 <div class="viewcode-block" id="DataInterface"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface">[docs]</a><span class="k">class</span> <span class="nc">DataInterface</span><span class="p">:</span>
@@ -229,10 +229,10 @@
 
 <span class="sd">    """</span>
 
-    <span class="n">data_io_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_io_dict</span>
+    <span class="n">dataio_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="n">dataio_dict</span>
     <span class="sd">"""A dictionary that maps the file extensions to the corresponding data io</span>
 <span class="sd">    class. This is a module-level variable from</span>
-<span class="sd">    :py:data:`pplkit.data.io.data_io_dict`.</span>
+<span class="sd">    :py:data:`pplkit.data.io.dataio_dict`.</span>
 
 <span class="sd">    :meta hide-value:</span>
 
@@ -279,7 +279,7 @@
 
 <span class="sd">        """</span>
         <span class="n">fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fpath</span><span class="p">(</span><span class="o">*</span><span class="n">fparts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_io_dict</span><span class="p">[</span><span class="n">fpath</span><span class="o">.</span><span class="n">suffix</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataio_dict</span><span class="p">[</span><span class="n">fpath</span><span class="o">.</span><span class="n">suffix</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataInterface.dump"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.interface.DataInterface.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">fparts</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
              <span class="n">mkdir</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
@@ -301,7 +301,7 @@
 
 <span class="sd">        """</span>
         <span class="n">fpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_fpath</span><span class="p">(</span><span class="o">*</span><span class="n">fparts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_io_dict</span><span class="p">[</span><span class="n">fpath</span><span class="o">.</span><span class="n">suffix</span><span class="p">]</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="n">mkdir</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataio_dict</span><span class="p">[</span><span class="n">fpath</span><span class="o">.</span><span class="n">suffix</span><span class="p">]</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">mkdir</span><span class="o">=</span><span class="n">mkdir</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="se">\n</span><span class="s2">"</span>

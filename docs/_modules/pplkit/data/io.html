@@ -298,7 +298,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">fpath</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(fextns=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fextns</span><span class="si">}</span><span class="s2">)"</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">()"</span></div>
 
 
 <div class="viewcode-block" id="CSVIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.CSVIO">[docs]</a><span class="k">class</span> <span class="nc">CSVIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
@@ -371,28 +371,27 @@
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
 
 
-<span class="n">data_io_instances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">CSVIO</span><span class="p">(),</span>
-    <span class="n">YAMLIO</span><span class="p">(),</span>
-    <span class="n">PickleIO</span><span class="p">(),</span>
-    <span class="n">ParquetIO</span><span class="p">(),</span>
-    <span class="n">JSONIO</span><span class="p">(),</span>
+<span class="n">csvio</span> <span class="o">=</span> <span class="n">CSVIO</span><span class="p">()</span>
+<span class="n">yamlio</span> <span class="o">=</span> <span class="n">YAMLIO</span><span class="p">()</span>
+<span class="n">pickleio</span> <span class="o">=</span> <span class="n">PickleIO</span><span class="p">()</span>
+<span class="n">parquetio</span> <span class="o">=</span> <span class="n">ParquetIO</span><span class="p">()</span>
+<span class="n">jsonio</span> <span class="o">=</span> <span class="n">JSONIO</span><span class="p">()</span>
+
+<span class="n">_dataio_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">csvio</span><span class="p">,</span>
+    <span class="n">yamlio</span><span class="p">,</span>
+    <span class="n">pickleio</span><span class="p">,</span>
+    <span class="n">parquetio</span><span class="p">,</span>
+    <span class="n">jsonio</span><span class="p">,</span>
 <span class="p">]</span>
-<span class="sd">"""Instances of all the data ios. These are singletons and module variables.</span>
-
-<span class="sd">:meta hide-value:</span>
-
-<span class="sd">"""</span>
 
 
-<span class="n">data_io_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">fextn</span><span class="p">:</span> <span class="n">data_io</span>
-    <span class="k">for</span> <span class="n">data_io</span> <span class="ow">in</span> <span class="n">data_io_instances</span> <span class="k">for</span> <span class="n">fextn</span> <span class="ow">in</span> <span class="n">data_io</span><span class="o">.</span><span class="n">fextns</span>
+<span class="n">dataio_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">fextn</span><span class="p">:</span> <span class="n">dataio</span>
+    <span class="k">for</span> <span class="n">dataio</span> <span class="ow">in</span> <span class="n">_dataio_list</span> <span class="k">for</span> <span class="n">fextn</span> <span class="ow">in</span> <span class="n">dataio</span><span class="o">.</span><span class="n">fextns</span>
 <span class="p">}</span>
 <span class="sd">"""Instances of data ios, organized in a dictionary with key as the file</span>
-<span class="sd">extensions for each :py:class:`DataIO` class.</span>
-
-<span class="sd">:meta hide-value:</span>
+<span class="sd">extensions for each :class:`DataIO` class.</span>
 
 <span class="sd">"""</span>
 </pre></div>

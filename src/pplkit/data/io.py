@@ -87,7 +87,7 @@ class DataIO(ABC):
         self._dump(obj, fpath, **options)
 
     def __repr__(self) -> str:
-        return f"{type(self).__name__}(fextns={self.fextns})"
+        return f"{type(self).__name__}()"
 
 
 class CSVIO(DataIO):
@@ -160,27 +160,26 @@ class JSONIO(DataIO):
             json.dump(obj, f, **options)
 
 
-data_io_instances: List[DataIO] = [
-    CSVIO(),
-    YAMLIO(),
-    PickleIO(),
-    ParquetIO(),
-    JSONIO(),
+csvio = CSVIO()
+yamlio = YAMLIO()
+pickleio = PickleIO()
+parquetio = ParquetIO()
+jsonio = JSONIO()
+
+_dataio_list: List[DataIO] = [
+    csvio,
+    yamlio,
+    pickleio,
+    parquetio,
+    jsonio,
 ]
-"""Instances of all the data ios. These are singletons and module variables.
-
-:meta hide-value:
-
-"""
 
 
-data_io_dict: Dict[str, DataIO] = {
-    fextn: data_io
-    for data_io in data_io_instances for fextn in data_io.fextns
+dataio_dict: Dict[str, DataIO] = {
+    fextn: dataio
+    for dataio in _dataio_list for fextn in dataio.fextns
 }
 """Instances of data ios, organized in a dictionary with key as the file
-extensions for each :py:class:`DataIO` class.
-
-:meta hide-value:
+extensions for each :class:`DataIO` class.
 
 """

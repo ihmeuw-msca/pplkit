@@ -352,19 +352,10 @@ data type matches.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py data">
-<dt class="sig sig-object py" id="pplkit.data.io.data_io_instances">
-<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">data_io_instances</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.io.data_io_instances" title="Permalink to this definition">#</a></dt>
-<dd><p>Instances of all the data ios. These are singletons and module variables.</p>
-<dl class="field-list simple">
-</dl>
-</dd></dl>
-<dl class="py data">
-<dt class="sig sig-object py" id="pplkit.data.io.data_io_dict">
-<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">data_io_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.io.data_io_dict" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pplkit.data.io.dataio_dict">
+<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">dataio_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'.csv':</span> <span class="pre">CSVIO(),</span> <span class="pre">'.json':</span> <span class="pre">JSONIO(),</span> <span class="pre">'.parquet':</span> <span class="pre">ParquetIO(),</span> <span class="pre">'.pickle':</span> <span class="pre">PickleIO(),</span> <span class="pre">'.pkl':</span> <span class="pre">PickleIO(),</span> <span class="pre">'.yaml':</span> <span class="pre">YAMLIO(),</span> <span class="pre">'.yml':</span> <span class="pre">YAMLIO()}</span></em><a class="headerlink" href="#pplkit.data.io.dataio_dict" title="Permalink to this definition">#</a></dt>
 <dd><p>Instances of data ios, organized in a dictionary with key as the file
 extensions for each <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a> class.</p>
-<dl class="field-list simple">
-</dl>
 </dd></dl>
 </section>
 <section id="module-pplkit.data.interface">
@@ -383,11 +374,11 @@ argument’s value.</p>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.data_io_dict">
-<span class="sig-name descname"><span class="pre">data_io_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.interface.DataInterface.data_io_dict" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.dataio_dict">
+<span class="sig-name descname"><span class="pre">dataio_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.interface.DataInterface.dataio_dict" title="Permalink to this definition">#</a></dt>
 <dd><p>A dictionary that maps the file extensions to the corresponding data io
 class. This is a module-level variable from
-<a class="reference internal" href="#pplkit.data.io.data_io_dict" title="pplkit.data.io.data_io_dict"><code class="xref py py-data docutils literal notranslate"><span class="pre">pplkit.data.io.data_io_dict</span></code></a>.</p>
+<a class="reference internal" href="#pplkit.data.io.dataio_dict" title="pplkit.data.io.dataio_dict"><code class="xref py py-data docutils literal notranslate"><span class="pre">pplkit.data.io.dataio_dict</span></code></a>.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>

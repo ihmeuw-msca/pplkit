@@ -2,7 +2,7 @@ from functools import partial
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
-from pplkit.data.io import DataIO, data_io_dict
+from pplkit.data.io import DataIO, dataio_dict
 
 
 class DataInterface:
@@ -18,10 +18,10 @@ class DataInterface:
 
     """
 
-    data_io_dict: Dict[str, DataIO] = data_io_dict
+    dataio_dict: Dict[str, DataIO] = dataio_dict
     """A dictionary that maps the file extensions to the corresponding data io
     class. This is a module-level variable from
-    :py:data:`pplkit.data.io.data_io_dict`.
+    :py:data:`pplkit.data.io.dataio_dict`.
 
     :meta hide-value:
 
@@ -68,7 +68,7 @@ class DataInterface:
 
         """
         fpath = self.get_fpath(*fparts, key=key)
-        return self.data_io_dict[fpath.suffix].load(fpath, **options)
+        return self.dataio_dict[fpath.suffix].load(fpath, **options)
 
     def dump(self, obj: Any, *fparts: str, key: str = "",
              mkdir: bool = True, **options: Dict[str, Any]):
@@ -90,7 +90,7 @@ class DataInterface:
 
         """
         fpath = self.get_fpath(*fparts, key=key)
-        self.data_io_dict[fpath.suffix].dump(obj, fpath, mkdir=mkdir, **options)
+        self.dataio_dict[fpath.suffix].dump(obj, fpath, mkdir=mkdir, **options)
 
     def __repr__(self) -> str:
         expr = f"{type(self).__name__}(\n"
