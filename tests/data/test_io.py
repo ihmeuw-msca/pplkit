@@ -4,7 +4,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-from pplkit.data.io import CSVIO, JSONIO, YAMLIO, ParquetIO, PickleIO
+
+from pplkit.data.io import CSVIO, JSONIO, TOMLIO, YAMLIO, ParquetIO, PickleIO
 
 tmpdir = Path(__file__).parents[1] / "tmp"
 
@@ -12,7 +13,8 @@ tmpdir = Path(__file__).parents[1] / "tmp"
 @pytest.fixture(scope="class", autouse=True)
 def rm_tmpdir_after_tests():
     yield
-    shutil.rmtree(tmpdir)
+    if tmpdir.exists():
+        shutil.rmtree(tmpdir)
 
 
 @pytest.fixture
@@ -62,6 +64,15 @@ def test_pickleio(data):
     port = PickleIO()
     port.dump(data, tmpdir / "file.pkl")
     loaded_data = port.load(tmpdir / "file.pkl")
+
+    for key in ["a", "b"]:
+        assert np.allclose(data[key], loaded_data[key])
+
+
+def test_tomlio(data):
+    port = TOMLIO()
+    port.dump(data, tmpdir / "file.toml")
+    loaded_data = port.load(tmpdir / "file.toml")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
