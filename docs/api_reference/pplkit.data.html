@@ -1,15 +1,15 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="API Reference" href="index.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.03.04"/>
-        <title>pplkit.data - pplkit 0.0.0</title>
+    <!-- Generated with Sphinx 6.2.1 and Furo 2023.03.27 -->
+        <title>pplkit.data - pplkit 0.1.0</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=935aa2abcc5c1da4283d1dc201fb1f0add16d23a" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=25ceb02ed1c46dc30f2321ff83e92799f69dfdb9" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     
     
@@ -49,10 +49,12 @@
   }
 </style></head>
   <body>
+    
     <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
     
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
     <title>Contents</title>
@@ -134,7 +136,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">pplkit 0.0.0</div></a>
+      <a href="../index.html"><div class="brand">pplkit 0.1.0</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -161,10 +163,10 @@
     <img class="sidebar-logo only-dark" src="../_static/logo/logo-dark.png" alt="Dark Logo"/>
   </div>
   
-  <span class="sidebar-brand-text">pplkit 0.0.0</span>
+  <span class="sidebar-brand-text">pplkit 0.1.0</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -195,7 +197,9 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -210,156 +214,176 @@
         </div>
         <article role="main">
           <section id="pplkit-data">
-<h1>pplkit.data<a class="headerlink" href="#pplkit-data" title="Permalink to this headline">#</a></h1>
+<h1>pplkit.data<a class="headerlink" href="#pplkit-data" title="Permalink to this heading">#</a></h1>
 <section id="module-pplkit.data.io">
-<span id="pplkit-data-io"></span><h2>pplkit.data.io<a class="headerlink" href="#module-pplkit.data.io" title="Permalink to this headline">#</a></h2>
+<span id="pplkit-data-io"></span><h2>pplkit.data.io<a class="headerlink" href="#module-pplkit.data.io" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">DataIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#DataIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.DataIO" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Bridge class that unifies the file I/O for different data types.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO.fextns">
-<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('',)</span></em><a class="headerlink" href="#pplkit.data.io.DataIO.fextns" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('',)</span></em><a class="headerlink" href="#pplkit.data.io.DataIO.fextns" title="Permalink to this definition">#</a></dt>
 <dd><p>The file extensions. When loading a file, it will be used to check if
 the file extension matches.</p>
 </dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO.dtypes">
-<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'object'&gt;,)</span></em><a class="headerlink" href="#pplkit.data.io.DataIO.dtypes" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'object'&gt;,)</span></em><a class="headerlink" href="#pplkit.data.io.DataIO.dtypes" title="Permalink to this definition">#</a></dt>
 <dd><p>The data types. When dumping the data, it will be used to check if the
 data type matches.</p>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO.load">
 <span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fpath</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/io.html#DataIO.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.DataIO.load" title="Permalink to this definition">#</a></dt>
 <dd><p>Load data from given path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fpath</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Provided file path.</p></li>
+<li><p><strong>fpath</strong> (<em>str</em><em> | </em><em>Path</em>) – Provided file path.</p></li>
 <li><p><strong>options</strong> – Extra arguments for the load function.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – Raised when the file extension doesn’t match.</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Data loaded from the given path.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pplkit.data.io.DataIO.dump">
 <span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mkdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/io.html#DataIO.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.DataIO.dump" title="Permalink to this definition">#</a></dt>
 <dd><p>Dump data to given path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>Any</em>) – Provided data object.</p></li>
-<li><p><strong>fpath</strong> (<em>str</em><em> | </em><em>pathlib.Path</em>) – Provided file path.</p></li>
+<li><p><strong>fpath</strong> (<em>str</em><em> | </em><em>Path</em>) – Provided file path.</p></li>
 <li><p><strong>mkdir</strong> (<em>bool</em>) – If true, it will automatically create the parent directory. The
 default is true.</p></li>
 <li><p><strong>options</strong> – Extra arguments for the dump function.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>TypeError</strong> – Raised when the given data object type doesn’t match.</p>
 </dd>
 </dl>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.io.CSVIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">CSVIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#CSVIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.CSVIO" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">pplkit.data.io.DataIO</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.CSVIO.fextns">
-<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.csv',)</span></em><a class="headerlink" href="#pplkit.data.io.CSVIO.fextns" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.csv',)</span></em><a class="headerlink" href="#pplkit.data.io.CSVIO.fextns" title="Permalink to this definition">#</a></dt>
 <dd><p>The file extensions. When loading a file, it will be used to check if
 the file extension matches.</p>
 </dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.CSVIO.dtypes">
-<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'pandas.core.frame.DataFrame'&gt;,)</span></em><a class="headerlink" href="#pplkit.data.io.CSVIO.dtypes" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'pandas.core.frame.DataFrame'&gt;,)</span></em><a class="headerlink" href="#pplkit.data.io.CSVIO.dtypes" title="Permalink to this definition">#</a></dt>
 <dd><p>The data types. When dumping the data, it will be used to check if the
 data type matches.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.io.PickleIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">PickleIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#PickleIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.PickleIO" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">pplkit.data.io.DataIO</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.PickleIO.fextns">
-<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.pkl',</span> <span class="pre">'.pickle')</span></em><a class="headerlink" href="#pplkit.data.io.PickleIO.fextns" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.pkl',</span> <span class="pre">'.pickle')</span></em><a class="headerlink" href="#pplkit.data.io.PickleIO.fextns" title="Permalink to this definition">#</a></dt>
 <dd><p>The file extensions. When loading a file, it will be used to check if
 the file extension matches.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.io.YAMLIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">YAMLIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#YAMLIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.YAMLIO" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">pplkit.data.io.DataIO</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.YAMLIO.fextns">
-<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.yml',</span> <span class="pre">'.yaml')</span></em><a class="headerlink" href="#pplkit.data.io.YAMLIO.fextns" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.yml',</span> <span class="pre">'.yaml')</span></em><a class="headerlink" href="#pplkit.data.io.YAMLIO.fextns" title="Permalink to this definition">#</a></dt>
 <dd><p>The file extensions. When loading a file, it will be used to check if
 the file extension matches.</p>
 </dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.YAMLIO.dtypes">
-<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></em><a class="headerlink" href="#pplkit.data.io.YAMLIO.dtypes" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></em><a class="headerlink" href="#pplkit.data.io.YAMLIO.dtypes" title="Permalink to this definition">#</a></dt>
 <dd><p>The data types. When dumping the data, it will be used to check if the
 data type matches.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.io.ParquetIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">ParquetIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#ParquetIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.ParquetIO" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">pplkit.data.io.DataIO</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.ParquetIO.fextns">
-<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.parquet',)</span></em><a class="headerlink" href="#pplkit.data.io.ParquetIO.fextns" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.parquet',)</span></em><a class="headerlink" href="#pplkit.data.io.ParquetIO.fextns" title="Permalink to this definition">#</a></dt>
 <dd><p>The file extensions. When loading a file, it will be used to check if
 the file extension matches.</p>
 </dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.ParquetIO.dtypes">
-<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'pandas.core.frame.DataFrame'&gt;,)</span></em><a class="headerlink" href="#pplkit.data.io.ParquetIO.dtypes" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'pandas.core.frame.DataFrame'&gt;,)</span></em><a class="headerlink" href="#pplkit.data.io.ParquetIO.dtypes" title="Permalink to this definition">#</a></dt>
 <dd><p>The data types. When dumping the data, it will be used to check if the
 data type matches.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.io.JSONIO">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">JSONIO</span></span><a class="reference internal" href="../_modules/pplkit/data/io.html#JSONIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.io.JSONIO" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">pplkit.data.io.DataIO</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.JSONIO.fextns">
-<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.json',)</span></em><a class="headerlink" href="#pplkit.data.io.JSONIO.fextns" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">fextns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('.json',)</span></em><a class="headerlink" href="#pplkit.data.io.JSONIO.fextns" title="Permalink to this definition">#</a></dt>
 <dd><p>The file extensions. When loading a file, it will be used to check if
 the file extension matches.</p>
 </dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.io.JSONIO.dtypes">
-<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></em><a class="headerlink" href="#pplkit.data.io.JSONIO.dtypes" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dtypes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(&lt;class</span> <span class="pre">'dict'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></em><a class="headerlink" href="#pplkit.data.io.JSONIO.dtypes" title="Permalink to this definition">#</a></dt>
 <dd><p>The data types. When dumping the data, it will be used to check if the
 data type matches.</p>
 </dd></dl>
+
 </dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="pplkit.data.io.dataio_dict">
-<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">dataio_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'.csv':</span> <span class="pre">CSVIO(),</span> <span class="pre">'.json':</span> <span class="pre">JSONIO(),</span> <span class="pre">'.parquet':</span> <span class="pre">ParquetIO(),</span> <span class="pre">'.pickle':</span> <span class="pre">PickleIO(),</span> <span class="pre">'.pkl':</span> <span class="pre">PickleIO(),</span> <span class="pre">'.yaml':</span> <span class="pre">YAMLIO(),</span> <span class="pre">'.yml':</span> <span class="pre">YAMLIO()}</span></em><a class="headerlink" href="#pplkit.data.io.dataio_dict" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pplkit.data.io.</span></span><span class="sig-name descname"><span class="pre">dataio_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'.csv':</span> <span class="pre">CSVIO(),</span> <span class="pre">'.json':</span> <span class="pre">JSONIO(),</span> <span class="pre">'.parquet':</span> <span class="pre">ParquetIO(),</span> <span class="pre">'.pickle':</span> <span class="pre">PickleIO(),</span> <span class="pre">'.pkl':</span> <span class="pre">PickleIO(),</span> <span class="pre">'.yaml':</span> <span class="pre">YAMLIO(),</span> <span class="pre">'.yml':</span> <span class="pre">YAMLIO()}</span></em><a class="headerlink" href="#pplkit.data.io.dataio_dict" title="Permalink to this definition">#</a></dt>
 <dd><p>Instances of data ios, organized in a dictionary with key as the file
 extensions for each <a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataIO</span></code></a> class.</p>
 </dd></dl>
+
 </section>
 <section id="module-pplkit.data.interface">
-<span id="pplkit-data-interface"></span><h2>pplkit.data.interface<a class="headerlink" href="#module-pplkit.data.interface" title="Permalink to this headline">#</a></h2>
+<span id="pplkit-data-interface"></span><h2>pplkit.data.interface<a class="headerlink" href="#module-pplkit.data.interface" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pplkit.data.interface.</span></span><span class="sig-name descname"><span class="pre">DataInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">dirs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/interface.html#DataInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.interface.DataInterface" title="Permalink to this definition">#</a></dt>
@@ -367,76 +391,118 @@ extensions for each <a class="reference internal" href="#pplkit.data.io.DataIO" 
 <p>Data interface that store important directories and automatically read
 and write data to the stored directories based on their data types.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>dirs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em> | </em><em>pathlib.Path</em><em>]</em>) – Directories to manage with directory’s name as the name of the keyword
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dirs</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em> | </em><em>pathlib.Path</em><em>]</em>) – Directories to manage with directory’s name as the name of the keyword
 argument’s name and directory’s path as the value of the keyword
 argument’s value.</p>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.dataio_dict">
-<span class="sig-name descname"><span class="pre">dataio_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.interface.DataInterface.dataio_dict" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dataio_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pplkit.data.io.DataIO" title="pplkit.data.io.DataIO"><span class="pre">pplkit.data.io.DataIO</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pplkit.data.interface.DataInterface.dataio_dict" title="Permalink to this definition">#</a></dt>
 <dd><p>A dictionary that maps the file extensions to the corresponding data io
 class. This is a module-level variable from
 <a class="reference internal" href="#pplkit.data.io.dataio_dict" title="pplkit.data.io.dataio_dict"><code class="xref py py-data docutils literal notranslate"><span class="pre">pplkit.data.io.dataio_dict</span></code></a>.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.add_dir">
+<span class="sig-name descname"><span class="pre">add_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exist_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/interface.html#DataInterface.add_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.interface.DataInterface.add_dir" title="Permalink to this definition">#</a></dt>
+<dd><p>Add a directory to instance. If the directory already exist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Directory name.</p></li>
+<li><p><strong>value</strong> (<em>str</em><em> | </em><em>Path</em>) – Directory path.</p></li>
+<li><p><strong>exist_ok</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">exist_ok=True</span></code> and <code class="docutils literal notranslate"><span class="pre">key</span></code> already exists in the current
+instance it will raise an error. Otherwise it will overwrite the
+path corresponding to the <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raised when <code class="docutils literal notranslate"><span class="pre">exist_ok=False</span></code> and <code class="docutils literal notranslate"><span class="pre">key</span></code> already exists.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.remove_dir">
+<span class="sig-name descname"><span class="pre">remove_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/interface.html#DataInterface.remove_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.interface.DataInterface.remove_dir" title="Permalink to this definition">#</a></dt>
+<dd><p>Remove a directory from the current set of directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<em>str</em>) – Directory name</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.get_fpath">
 <span class="sig-name descname"><span class="pre">get_fpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fparts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/interface.html#DataInterface.get_fpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.interface.DataInterface.get_fpath" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the file path from the name of the directory and the sub-parts
 under the directory.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fparts</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – Subdirectories or the file name.</p></li>
+<li><p><strong>fparts</strong> (<em>tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – Subdirectories or the file name.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The name of the directory stored in the class.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pathlib.Path</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.load">
 <span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fparts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/interface.html#DataInterface.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.interface.DataInterface.load" title="Permalink to this definition">#</a></dt>
 <dd><p>Load data from given directory.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fparts</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – Subdirectories or the file name.</p></li>
+<li><p><strong>fparts</strong> (<em>tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – Subdirectories or the file name.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The name of the directory stored in the class.</p></li>
-<li><p><strong>options</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Extra arguments for the load function.</p></li>
+<li><p><strong>options</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Extra arguments for the load function.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Data loaded from the given path.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pplkit.data.interface.DataInterface.dump">
 <span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">fparts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mkdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pplkit/data/interface.html#DataInterface.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pplkit.data.interface.DataInterface.dump" title="Permalink to this definition">#</a></dt>
 <dd><p>Dump data to the given directory.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>Any</em>) – Provided data object.</p></li>
 <li><p><strong>fparts</strong> (<em>str</em>) – Subdirectories or the file name.</p></li>
 <li><p><strong>key</strong> (<em>str</em>) – The name of the directory stored in the class.</p></li>
 <li><p><strong>mkdir</strong> (<em>bool</em>) – If true, it will automatically create the parent directory. The
 default is true.</p></li>
-<li><p><strong>options</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Extra arguments for the dump function.</p></li>
+<li><p><strong>options</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Extra arguments for the dump function.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
+
 </dd></dl>
+
 </section>
 </section>
 
@@ -447,7 +513,7 @@ default is true.</p></li>
         <div class="related-pages">
           
           <a class="prev-page" href="index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -461,7 +527,7 @@ default is true.</p></li>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022 IHME Math Sciences
+                Copyright &#169; 2023, IHME Math Sciences
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -469,9 +535,7 @@ default is true.</p></li>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -483,15 +547,60 @@ default is true.</p></li>
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">pplkit.data</a><ul>
-<li><a class="reference internal" href="#module-pplkit.data.io">pplkit.data.io</a></li>
-<li><a class="reference internal" href="#module-pplkit.data.interface">pplkit.data.interface</a></li>
+<li><a class="reference internal" href="#module-pplkit.data.io">pplkit.data.io</a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.DataIO"><code class="docutils literal notranslate"><span class="pre">DataIO</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.DataIO.fextns"><code class="docutils literal notranslate"><span class="pre">DataIO.fextns</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.DataIO.dtypes"><code class="docutils literal notranslate"><span class="pre">DataIO.dtypes</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.DataIO.load"><code class="docutils literal notranslate"><span class="pre">DataIO.load()</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.DataIO.dump"><code class="docutils literal notranslate"><span class="pre">DataIO.dump()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplkit.data.io.CSVIO"><code class="docutils literal notranslate"><span class="pre">CSVIO</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.CSVIO.fextns"><code class="docutils literal notranslate"><span class="pre">CSVIO.fextns</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.CSVIO.dtypes"><code class="docutils literal notranslate"><span class="pre">CSVIO.dtypes</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplkit.data.io.PickleIO"><code class="docutils literal notranslate"><span class="pre">PickleIO</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.PickleIO.fextns"><code class="docutils literal notranslate"><span class="pre">PickleIO.fextns</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplkit.data.io.YAMLIO"><code class="docutils literal notranslate"><span class="pre">YAMLIO</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.YAMLIO.fextns"><code class="docutils literal notranslate"><span class="pre">YAMLIO.fextns</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.YAMLIO.dtypes"><code class="docutils literal notranslate"><span class="pre">YAMLIO.dtypes</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplkit.data.io.ParquetIO"><code class="docutils literal notranslate"><span class="pre">ParquetIO</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.ParquetIO.fextns"><code class="docutils literal notranslate"><span class="pre">ParquetIO.fextns</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.ParquetIO.dtypes"><code class="docutils literal notranslate"><span class="pre">ParquetIO.dtypes</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplkit.data.io.JSONIO"><code class="docutils literal notranslate"><span class="pre">JSONIO</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.io.JSONIO.fextns"><code class="docutils literal notranslate"><span class="pre">JSONIO.fextns</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.io.JSONIO.dtypes"><code class="docutils literal notranslate"><span class="pre">JSONIO.dtypes</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pplkit.data.io.dataio_dict"><code class="docutils literal notranslate"><span class="pre">dataio_dict</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pplkit.data.interface">pplkit.data.interface</a><ul>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface"><code class="docutils literal notranslate"><span class="pre">DataInterface</span></code></a><ul>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface.dataio_dict"><code class="docutils literal notranslate"><span class="pre">DataInterface.dataio_dict</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface.add_dir"><code class="docutils literal notranslate"><span class="pre">DataInterface.add_dir()</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface.remove_dir"><code class="docutils literal notranslate"><span class="pre">DataInterface.remove_dir()</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface.get_fpath"><code class="docutils literal notranslate"><span class="pre">DataInterface.get_fpath()</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface.load"><code class="docutils literal notranslate"><span class="pre">DataInterface.load()</span></code></a></li>
+<li><a class="reference internal" href="#pplkit.data.interface.DataInterface.dump"><code class="docutils literal notranslate"><span class="pre">DataInterface.dump()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -504,9 +613,8 @@ default is true.</p></li>
     </aside>
   </div>
 </div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     </body>
 </html>
