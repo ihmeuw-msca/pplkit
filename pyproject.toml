@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pplkit"
+version = "0.1.0"
+description = "Pipeline building toolkit"
+readme = "README.rst"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "IHME Math Sciences", email = "ihme.math.sciences@gmail.com" },
+]
+dependencies = ["dill", "pyyaml", "pandas[parquet]"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+docs = ["sphinx", "sphinx-autodoc-typehints", "furo"]
+
+[project.urls]
+github = "https://github.com/ihmeuw-msca/pplkit"
+
+[tool.sphinx]
+project = "pplkit"
+author = "IHME Math Sciences"
+copyright = "2023, IHME Math Sciences"
+version = "0.1.0"
