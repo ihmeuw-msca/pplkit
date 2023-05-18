@@ -44,6 +44,13 @@ def test_add_dir():
     assert hasattr(dataif, "dump_tmp")
 
 
+def test_add_dir_exist_ok():
+    dataif = DataInterface(tmp=tmpdir)
+    with pytest.raises(ValueError):
+        dataif.add_dir("tmp", tmpdir)
+    dataif.add_dir("tmp", tmpdir, exist_ok=True)
+
+
 def test_remove_dir():
     dataif = DataInterface(tmp=tmpdir)
     assert len(dataif.keys) == 1
