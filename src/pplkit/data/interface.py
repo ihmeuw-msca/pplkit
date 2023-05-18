@@ -32,7 +32,28 @@ class DataInterface:
         for key, value in dirs.items():
             self.add_dir(key, value)
 
-    def add_dir(self, key: str, value: str | Path) -> None:
+    def add_dir(self, key: str, value: str | Path, exist_ok: bool = False) -> None:
+        """Add a directory to instance. If the directory already exist
+
+        Parameters
+        ----------
+        key
+            Directory name.
+        value
+            Directory path.
+        exist_ok
+            If ``exist_ok=True`` and ``key`` already exists in the current
+            instance it will raise an error. Otherwise it will overwrite the
+            path corresponding to the ``key``.
+
+        Raises
+        ------
+        ValueError
+            Raised when ``exist_ok=False`` and ``key`` already exists.
+
+        """
+        if (not exist_ok) and (key in self.keys):
+            raise ValueError(f"{key} already exists")
         setattr(self, key, Path(value))
         setattr(self, f"load_{key}", partial(self.load, key=key))
         setattr(self, f"dump_{key}", partial(self.dump, key=key))
@@ -40,6 +61,14 @@ class DataInterface:
             self.keys.append(key)
 
     def remove_dir(self, key: str) -> None:
+        """Remove a directory from the current set of directories.
+
+        Parameters
+        ----------
+        key
+            Directory name
+
+        """
         if key in self.keys:
             delattr(self, key)
             delattr(self, f"load_{key}")
