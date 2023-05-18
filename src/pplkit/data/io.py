@@ -1,7 +1,7 @@
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Type
+from typing import Any, Type
 
 import dill
 import pandas as pd
@@ -9,16 +9,14 @@ import yaml
 
 
 class DataIO(ABC):
-    """Bridge class that unifies the file I/O for different data types.
+    """Bridge class that unifies the file I/O for different data types."""
 
-    """
-
-    fextns: Tuple[str] = ("",)
+    fextns: tuple[str] = ("",)
     """The file extensions. When loading a file, it will be used to check if
     the file extension matches.
 
     """
-    dtypes: Tuple[Type] = (object,)
+    dtypes: tuple[Type] = (object,)
     """The data types. When dumping the data, it will be used to check if the
     data type matches.
 
@@ -91,9 +89,8 @@ class DataIO(ABC):
 
 
 class CSVIO(DataIO):
-
-    fextns: Tuple[str] = (".csv",)
-    dtypes: Tuple[Type] = (pd.DataFrame,)
+    fextns: tuple[str] = (".csv",)
+    dtypes: tuple[Type] = (pd.DataFrame,)
 
     def _load(self, fpath: Path, **options) -> pd.DataFrame:
         return pd.read_csv(fpath, **options)
@@ -104,8 +101,7 @@ class CSVIO(DataIO):
 
 
 class PickleIO(DataIO):
-
-    fextns: Tuple[str] = (".pkl", ".pickle")
+    fextns: tuple[str] = (".pkl", ".pickle")
 
     def _load(self, fpath: Path, **options) -> Any:
         with open(fpath, "rb") as f:
@@ -117,25 +113,23 @@ class PickleIO(DataIO):
 
 
 class YAMLIO(DataIO):
+    fextns: tuple[str] = (".yml", ".yaml")
+    dtypes: tuple[Type] = (dict, list)
 
-    fextns: Tuple[str] = (".yml", ".yaml")
-    dtypes: Tuple[Type] = (dict, list)
-
-    def _load(self, fpath: Path, **options) -> Dict | List:
+    def _load(self, fpath: Path, **options) -> dict | list:
         options = dict(Loader=yaml.SafeLoader) | options
         with open(fpath, "r") as f:
             return yaml.load(f, **options)
 
-    def _dump(self, obj: Dict | List, fpath: Path, **options):
+    def _dump(self, obj: dict | list, fpath: Path, **options):
         options = dict(Dumper=yaml.SafeDumper) | options
         with open(fpath, "w") as f:
             return yaml.dump(obj, f, **options)
 
 
 class ParquetIO(DataIO):
-
-    fextns: Tuple[str] = (".parquet",)
-    dtypes: Tuple[Type] = (pd.DataFrame,)
+    fextns: tuple[str] = (".parquet",)
+    dtypes: tuple[Type] = (pd.DataFrame,)
 
     def _load(self, fpath: Path, **options) -> pd.DataFrame:
         options = dict(engine="pyarrow") | options
@@ -147,15 +141,14 @@ class ParquetIO(DataIO):
 
 
 class JSONIO(DataIO):
+    fextns: tuple[str] = (".json",)
+    dtypes: tuple[Type] = (dict, list)
 
-    fextns: Tuple[str] = (".json",)
-    dtypes: Tuple[Type] = (dict, list)
-
-    def _load(self, fpath: Path, **options) -> Dict | List:
+    def _load(self, fpath: Path, **options) -> dict | list:
         with open(fpath, "r") as f:
             return json.load(f, **options)
 
-    def _dump(self, obj: Dict | List, fpath: Path, **options):
+    def _dump(self, obj: dict | list, fpath: Path, **options):
         with open(fpath, "w") as f:
             json.dump(obj, f, **options)
 
@@ -166,7 +159,7 @@ pickleio = PickleIO()
 parquetio = ParquetIO()
 jsonio = JSONIO()
 
-_dataio_list: List[DataIO] = [
+_dataio_list: list[DataIO] = [
     csvio,
     yamlio,
     pickleio,
@@ -175,9 +168,8 @@ _dataio_list: List[DataIO] = [
 ]
 
 
-dataio_dict: Dict[str, DataIO] = {
-    fextn: dataio
-    for dataio in _dataio_list for fextn in dataio.fextns
+dataio_dict: dict[str, DataIO] = {
+    fextn: dataio for dataio in _dataio_list for fextn in dataio.fextns
 }
 """Instances of data ios, organized in a dictionary with key as the file
 extensions for each :class:`DataIO` class.
