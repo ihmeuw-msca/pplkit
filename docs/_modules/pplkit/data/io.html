@@ -219,18 +219,20 @@
 
 <span class="kn">import</span> <span class="nn">dill</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tomli</span>
+<span class="kn">import</span> <span class="nn">tomli_w</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 
 <div class="viewcode-block" id="DataIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.DataIO">[docs]</a><span class="k">class</span> <span class="nc">DataIO</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Bridge class that unifies the file I/O for different data types.&quot;&quot;&quot;</span>
 
-    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,)</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The file extensions. When loading a file, it will be used to check if</span>
 <span class="sd">    the file extension matches.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">object</span><span class="p">,)</span>
+    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">object</span><span class="p">,)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The data types. When dumping the data, it will be used to check if the</span>
 <span class="sd">    data type matches.</span>
 
@@ -303,8 +305,8 @@
 
 
 <div class="viewcode-block" id="CSVIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.CSVIO">[docs]</a><span class="k">class</span> <span class="nc">CSVIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
-    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,)</span>
-    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,)</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,)</span>
+    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,)</span>
 
     <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
@@ -315,7 +317,7 @@
 
 
 <div class="viewcode-block" id="PickleIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.PickleIO">[docs]</a><span class="k">class</span> <span class="nc">PickleIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
-    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;.pickle&quot;</span><span class="p">)</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;.pickle&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -327,8 +329,8 @@
 
 
 <div class="viewcode-block" id="YAMLIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.YAMLIO">[docs]</a><span class="k">class</span> <span class="nc">YAMLIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
-    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.yml&quot;</span><span class="p">,</span> <span class="s2">&quot;.yaml&quot;</span><span class="p">)</span>
-    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.yml&quot;</span><span class="p">,</span> <span class="s2">&quot;.yaml&quot;</span><span class="p">)</span>
+    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">)</span> <span class="o">|</span> <span class="n">options</span>
@@ -342,8 +344,8 @@
 
 
 <div class="viewcode-block" id="ParquetIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.ParquetIO">[docs]</a><span class="k">class</span> <span class="nc">ParquetIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
-    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">,)</span>
-    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,)</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">,)</span>
+    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,)</span>
 
     <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">engine</span><span class="o">=</span><span class="s2">&quot;pyarrow&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">options</span>
@@ -355,8 +357,8 @@
 
 
 <div class="viewcode-block" id="JSONIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.JSONIO">[docs]</a><span class="k">class</span> <span class="nc">JSONIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
-    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">,)</span>
-    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">,)</span>
+    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -367,11 +369,25 @@
             <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="TOMLIO"><a class="viewcode-back" href="../../../api_reference/pplkit.data.html#pplkit.data.io.TOMLIO">[docs]</a><span class="k">class</span> <span class="nc">TOMLIO</span><span class="p">(</span><span class="n">DataIO</span><span class="p">):</span>
+    <span class="n">fextns</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.toml&quot;</span><span class="p">,)</span>
+    <span class="n">dtypes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tomli</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">fpath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">tomli_w</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+
 <span class="n">csvio</span> <span class="o">=</span> <span class="n">CSVIO</span><span class="p">()</span>
 <span class="n">yamlio</span> <span class="o">=</span> <span class="n">YAMLIO</span><span class="p">()</span>
 <span class="n">pickleio</span> <span class="o">=</span> <span class="n">PickleIO</span><span class="p">()</span>
 <span class="n">parquetio</span> <span class="o">=</span> <span class="n">ParquetIO</span><span class="p">()</span>
 <span class="n">jsonio</span> <span class="o">=</span> <span class="n">JSONIO</span><span class="p">()</span>
+<span class="n">tomlio</span> <span class="o">=</span> <span class="n">TOMLIO</span><span class="p">()</span>
 
 <span class="n">_dataio_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataIO</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">csvio</span><span class="p">,</span>
@@ -379,6 +395,7 @@
     <span class="n">pickleio</span><span class="p">,</span>
     <span class="n">parquetio</span><span class="p">,</span>
     <span class="n">jsonio</span><span class="p">,</span>
+    <span class="n">tomlio</span><span class="p">,</span>
 <span class="p">]</span>
 
 

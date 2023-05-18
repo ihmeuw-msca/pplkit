@@ -5,18 +5,20 @@ from typing import Any, Type
 
 import dill
 import pandas as pd
+import tomli
+import tomli_w
 import yaml
 
 
 class DataIO(ABC):
     """Bridge class that unifies the file I/O for different data types."""
 
-    fextns: tuple[str] = ("",)
+    fextns: tuple[str, ...] = ("",)
     """The file extensions. When loading a file, it will be used to check if
     the file extension matches.
 
     """
-    dtypes: tuple[Type] = (object,)
+    dtypes: tuple[Type, ...] = (object,)
     """The data types. When dumping the data, it will be used to check if the
     data type matches.
 
@@ -89,8 +91,8 @@ class DataIO(ABC):
 
 
 class CSVIO(DataIO):
-    fextns: tuple[str] = (".csv",)
-    dtypes: tuple[Type] = (pd.DataFrame,)
+    fextns: tuple[str, ...] = (".csv",)
+    dtypes: tuple[Type, ...] = (pd.DataFrame,)
 
     def _load(self, fpath: Path, **options) -> pd.DataFrame:
         return pd.read_csv(fpath, **options)
@@ -101,7 +103,7 @@ class CSVIO(DataIO):
 
 
 class PickleIO(DataIO):
-    fextns: tuple[str] = (".pkl", ".pickle")
+    fextns: tuple[str, ...] = (".pkl", ".pickle")
 
     def _load(self, fpath: Path, **options) -> Any:
         with open(fpath, "rb") as f:
@@ -113,8 +115,8 @@ class PickleIO(DataIO):
 
 
 class YAMLIO(DataIO):
-    fextns: tuple[str] = (".yml", ".yaml")
-    dtypes: tuple[Type] = (dict, list)
+    fextns: tuple[str, ...] = (".yml", ".yaml")
+    dtypes: tuple[Type, ...] = (dict, list)
 
     def _load(self, fpath: Path, **options) -> dict | list:
         options = dict(Loader=yaml.SafeLoader) | options
@@ -128,8 +130,8 @@ class YAMLIO(DataIO):
 
 
 class ParquetIO(DataIO):
-    fextns: tuple[str] = (".parquet",)
-    dtypes: tuple[Type] = (pd.DataFrame,)
+    fextns: tuple[str, ...] = (".parquet",)
+    dtypes: tuple[Type, ...] = (pd.DataFrame,)
 
     def _load(self, fpath: Path, **options) -> pd.DataFrame:
         options = dict(engine="pyarrow") | options
@@ -141,8 +143,8 @@ class ParquetIO(DataIO):
 
 
 class JSONIO(DataIO):
-    fextns: tuple[str] = (".json",)
-    dtypes: tuple[Type] = (dict, list)
+    fextns: tuple[str, ...] = (".json",)
+    dtypes: tuple[Type, ...] = (dict, list)
 
     def _load(self, fpath: Path, **options) -> dict | list:
         with open(fpath, "r") as f:
@@ -153,11 +155,25 @@ class JSONIO(DataIO):
             json.dump(obj, f, **options)
 
 
+class TOMLIO(DataIO):
+    fextns: tuple[str, ...] = (".toml",)
+    dtypes: tuple[Type, ...] = (dict,)
+
+    def _load(self, fpath: Path, **options) -> dict:
+        with open(fpath, "rb") as f:
+            return tomli.load(f, **options)
+
+    def _dump(self, obj: dict, fpath: Path, **options):
+        with open(fpath, "wb") as f:
+            tomli_w.dump(obj, f)
+
+
 csvio = CSVIO()
 yamlio = YAMLIO()
 pickleio = PickleIO()
 parquetio = ParquetIO()
 jsonio = JSONIO()
+tomlio = TOMLIO()
 
 _dataio_list: list[DataIO] = [
     csvio,
@@ -165,6 +181,7 @@ _dataio_list: list[DataIO] = [
     pickleio,
     parquetio,
     jsonio,
+    tomlio,
 ]
 
 
