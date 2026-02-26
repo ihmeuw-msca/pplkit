@@ -7,7 +7,7 @@ name = "pplkit"
 version = "0.1.0"
 description = "Pipeline building toolkit"
 readme = "README.rst"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = { file = "LICENSE" }
 authors = [
     { name = "IHME Math Sciences", email = "ihme.math.sciences@gmail.com" },

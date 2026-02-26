@@ -1,7 +1,7 @@
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Type
+from typing import Any
 
 import dill
 import pandas as pd
@@ -18,7 +18,7 @@ class DataIO(ABC):
     the file extension matches.
 
     """
-    dtypes: tuple[Type, ...] = (object,)
+    dtypes: tuple[type, ...] = (object,)
     """The data types. When dumping the data, it will be used to check if the
     data type matches.
 
@@ -92,7 +92,7 @@ class DataIO(ABC):
 
 class CSVIO(DataIO):
     fextns: tuple[str, ...] = (".csv",)
-    dtypes: tuple[Type, ...] = (pd.DataFrame,)
+    dtypes: tuple[type, ...] = (pd.DataFrame,)
 
     def _load(self, fpath: Path, **options) -> pd.DataFrame:
         return pd.read_csv(fpath, **options)
@@ -116,7 +116,7 @@ class PickleIO(DataIO):
 
 class YAMLIO(DataIO):
     fextns: tuple[str, ...] = (".yml", ".yaml")
-    dtypes: tuple[Type, ...] = (dict, list)
+    dtypes: tuple[type, ...] = (dict, list)
 
     def _load(self, fpath: Path, **options) -> dict | list:
         options = dict(Loader=yaml.SafeLoader) | options
@@ -131,7 +131,7 @@ class YAMLIO(DataIO):
 
 class ParquetIO(DataIO):
     fextns: tuple[str, ...] = (".parquet",)
-    dtypes: tuple[Type, ...] = (pd.DataFrame,)
+    dtypes: tuple[type, ...] = (pd.DataFrame,)
 
     def _load(self, fpath: Path, **options) -> pd.DataFrame:
         options = dict(engine="pyarrow") | options
@@ -144,7 +144,7 @@ class ParquetIO(DataIO):
 
 class JSONIO(DataIO):
     fextns: tuple[str, ...] = (".json",)
-    dtypes: tuple[Type, ...] = (dict, list)
+    dtypes: tuple[type, ...] = (dict, list)
 
     def _load(self, fpath: Path, **options) -> dict | list:
         with open(fpath, "r") as f:
@@ -157,7 +157,7 @@ class JSONIO(DataIO):
 
 class TOMLIO(DataIO):
     fextns: tuple[str, ...] = (".toml",)
-    dtypes: tuple[Type, ...] = (dict,)
+    dtypes: tuple[type, ...] = (dict,)
 
     def _load(self, fpath: Path, **options) -> dict:
         with open(fpath, "rb") as f:
