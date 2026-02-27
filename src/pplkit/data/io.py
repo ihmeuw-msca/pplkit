@@ -1,11 +1,11 @@
 import abc
 import json
 import pathlib
+import tomllib
 import typing
 
 import dill
 import pandas as pd
-import tomli
 import tomli_w
 import yaml
 
@@ -181,7 +181,7 @@ class TOMLIO(DataIO):
 
     def _load(self, fpath: pathlib.Path, **options: typing.Any) -> dict:
         with open(fpath, "rb") as f:
-            return tomli.load(f, **options)
+            return tomllib.load(f, **options)
 
     def _dump(
         self, obj: dict, fpath: pathlib.Path, **options: typing.Any
