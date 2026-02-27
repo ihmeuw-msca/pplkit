@@ -28,7 +28,7 @@ class DataInterface:
     """
 
     def __init__(self, **dirs: str | pathlib.Path) -> None:
-        self.keys = []
+        self.keys: list[str] = []
         for key, value in dirs.items():
             self.add_dir(key, value)
 
