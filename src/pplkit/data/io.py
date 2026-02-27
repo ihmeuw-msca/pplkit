@@ -125,7 +125,7 @@ class PickleIO(DataIO):
         self, obj: typing.Any, fpath: pathlib.Path, **options: typing.Any
     ) -> None:
         with open(fpath, "wb") as f:
-            return dill.dump(obj, f, **options)
+            dill.dump(obj, f, **options)
 
 
 class YAMLIO(DataIO):
@@ -142,7 +142,7 @@ class YAMLIO(DataIO):
     ) -> None:
         options = dict(Dumper=yaml.SafeDumper) | options
         with open(fpath, "w") as f:
-            return yaml.dump(obj, f, **options)
+            yaml.dump(obj, f, **options)
 
 
 class ParquetIO(DataIO):
@@ -187,7 +187,7 @@ class TOMLIO(DataIO):
         self, obj: dict, fpath: pathlib.Path, **options: typing.Any
     ) -> None:
         with open(fpath, "wb") as f:
-            tomli_w.dump(obj, f)
+            tomli_w.dump(obj, f, **options)
 
 
 csvio = CSVIO()
