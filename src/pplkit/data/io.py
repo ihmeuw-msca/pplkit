@@ -13,17 +13,6 @@ import yaml
 class DataIO(abc.ABC):
     """Bridge class that unifies the file I/O for different data types."""
 
-    fextns: tuple[str, ...] = ("",)
-    """The file extensions. When loading a file, it will be used to check if
-    the file extension matches.
-
-    """
-    dtypes: tuple[type, ...] = (object,)
-    """The data types. When dumping the data, it will be used to check if the
-    data type matches.
-
-    """
-
     @classmethod
     @abc.abstractmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> typing.Any:
@@ -52,11 +41,6 @@ class DataIO(abc.ABC):
         options
             Extra arguments for the load function.
 
-        Raises
-        ------
-        ValueError
-            Raised when the file extension doesn't match.
-
         Returns
         -------
         Any
@@ -64,8 +48,6 @@ class DataIO(abc.ABC):
 
         """
         fpath = pathlib.Path(fpath)
-        if fpath.suffix not in cls.fextns:
-            raise ValueError(f"File extension must be in {cls.fextns}.")
         return cls._load(fpath, **options)
 
     @classmethod
@@ -90,24 +72,14 @@ class DataIO(abc.ABC):
         options
             Extra arguments for the dump function.
 
-        Raises
-        ------
-        TypeError
-            Raised when the given data object type doesn't match.
-
         """
         fpath = pathlib.Path(fpath)
-        if not isinstance(obj, cls.dtypes):
-            raise TypeError(f"Data must be an instance of {cls.dtypes}.")
         if mkdir:
             fpath.parent.mkdir(parents=True, exist_ok=True)
         cls._dump(obj, fpath, **options)
 
 
 class CSVIO(DataIO):
-    fextns: tuple[str, ...] = (".csv",)
-    dtypes: tuple[type, ...] = (pd.DataFrame,)
-
     @classmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> pd.DataFrame:
         return pd.read_csv(fpath, **options)
@@ -124,8 +96,6 @@ class CSVIO(DataIO):
 
 
 class PickleIO(DataIO):
-    fextns: tuple[str, ...] = (".pkl", ".pickle")
-
     @classmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> typing.Any:
         with open(fpath, "rb") as f:
@@ -143,9 +113,6 @@ class PickleIO(DataIO):
 
 
 class YAMLIO(DataIO):
-    fextns: tuple[str, ...] = (".yml", ".yaml")
-    dtypes: tuple[type, ...] = (dict, list)
-
     @classmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> dict | list:
         options = dict(Loader=yaml.SafeLoader) | options
@@ -165,9 +132,6 @@ class YAMLIO(DataIO):
 
 
 class ParquetIO(DataIO):
-    fextns: tuple[str, ...] = (".parquet",)
-    dtypes: tuple[type, ...] = (pd.DataFrame,)
-
     @classmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> pd.DataFrame:
         options = dict(engine="pyarrow") | options
@@ -185,9 +149,6 @@ class ParquetIO(DataIO):
 
 
 class JSONIO(DataIO):
-    fextns: tuple[str, ...] = (".json",)
-    dtypes: tuple[type, ...] = (dict, list)
-
     @classmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> dict | list:
         with open(fpath, "r") as f:
@@ -205,9 +166,6 @@ class JSONIO(DataIO):
 
 
 class TOMLIO(DataIO):
-    fextns: tuple[str, ...] = (".toml",)
-    dtypes: tuple[type, ...] = (dict,)
-
     @classmethod
     def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> dict:
         with open(fpath, "rb") as f:
@@ -224,18 +182,15 @@ class TOMLIO(DataIO):
             tomli_w.dump(obj, f, **options)
 
 
-_dataio_list: list[type[DataIO]] = [
-    CSVIO,
-    YAMLIO,
-    PickleIO,
-    ParquetIO,
-    JSONIO,
-    TOMLIO,
-]
-
-
 dataio_dict: dict[str, type[DataIO]] = {
-    fextn: dataio for dataio in _dataio_list for fextn in dataio.fextns
+    ".csv": CSVIO,
+    ".pkl": PickleIO,
+    ".pickle": PickleIO,
+    ".yml": YAMLIO,
+    ".yaml": YAMLIO,
+    ".parquet": ParquetIO,
+    ".json": JSONIO,
+    ".toml": TOMLIO,
 }
 """Data IO classes, organized in a dictionary with key as the file
 extensions for each :class:`DataIO` class.

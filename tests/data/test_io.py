@@ -62,18 +62,6 @@ def test_tomlio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
         assert np.allclose(data[key], loaded_data[key])
 
 
-def test_load_invalid_extension(tmp_path: pathlib.Path) -> None:
-    fpath = tmp_path / "file.txt"
-    fpath.touch()
-    with pytest.raises(ValueError, match="File extension must be in"):
-        CSVIO.load(fpath)
-
-
-def test_dump_invalid_type(tmp_path: pathlib.Path) -> None:
-    with pytest.raises(TypeError, match="Data must be an instance of"):
-        CSVIO.dump({"a": 1}, tmp_path / "file.csv")
-
-
 def test_load_missing_file(tmp_path: pathlib.Path) -> None:
     with pytest.raises(FileNotFoundError):
         JSONIO.load(tmp_path / "nonexistent.json")
