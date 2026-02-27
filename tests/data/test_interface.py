@@ -23,7 +23,7 @@ def rm_tmpdir_after_tests():
 
 
 @pytest.mark.parametrize(
-    "fextn", [".json", ".yaml", ".pkl", ".csv", ".parquet"]
+    "fextn", [".json", ".yaml", ".pkl", ".csv", ".parquet", ".toml"]
 )
 def test_data_interface(data, fextn):
     dataif = DataInterface(tmp=tmpdir)
