@@ -123,7 +123,7 @@ class DataInterface:
         key: str = "",
         mkdir: bool = True,
         **options: typing.Any,
-    ):
+    ) -> None:
         """Dump data to the given directory.
 
         Parameters

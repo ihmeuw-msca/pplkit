@@ -29,7 +29,7 @@ class DataIO(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _dump(self, obj: typing.Any, fpath: pathlib.Path, **options):
+    def _dump(self, obj: typing.Any, fpath: pathlib.Path, **options) -> None:
         pass
 
     def load(self, fpath: str | pathlib.Path, **options) -> typing.Any:
@@ -59,8 +59,12 @@ class DataIO(abc.ABC):
         return self._load(fpath, **options)
 
     def dump(
-        self, obj: typing.Any, fpath: str | pathlib.Path, mkdir: bool = True, **options
-    ):
+        self,
+        obj: typing.Any,
+        fpath: str | pathlib.Path,
+        mkdir: bool = True,
+        **options,
+    ) -> None:
         """Dump data to given path.
 
         Parameters
@@ -99,7 +103,7 @@ class CSVIO(DataIO):
     def _load(self, fpath: pathlib.Path, **options) -> pd.DataFrame:
         return pd.read_csv(fpath, **options)
 
-    def _dump(self, obj: pd.DataFrame, fpath: pathlib.Path, **options):
+    def _dump(self, obj: pd.DataFrame, fpath: pathlib.Path, **options) -> None:
         options = dict(index=False) | options
         obj.to_csv(fpath, **options)
 
@@ -111,7 +115,7 @@ class PickleIO(DataIO):
         with open(fpath, "rb") as f:
             return dill.load(f, **options)
 
-    def _dump(self, obj: typing.Any, fpath: pathlib.Path, **options):
+    def _dump(self, obj: typing.Any, fpath: pathlib.Path, **options) -> None:
         with open(fpath, "wb") as f:
             return dill.dump(obj, f, **options)
 
@@ -125,7 +129,7 @@ class YAMLIO(DataIO):
         with open(fpath, "r") as f:
             return yaml.load(f, **options)
 
-    def _dump(self, obj: dict | list, fpath: pathlib.Path, **options):
+    def _dump(self, obj: dict | list, fpath: pathlib.Path, **options) -> None:
         options = dict(Dumper=yaml.SafeDumper) | options
         with open(fpath, "w") as f:
             return yaml.dump(obj, f, **options)
@@ -139,7 +143,7 @@ class ParquetIO(DataIO):
         options = dict(engine="pyarrow") | options
         return pd.read_parquet(fpath, **options)
 
-    def _dump(self, obj: pd.DataFrame, fpath: pathlib.Path, **options):
+    def _dump(self, obj: pd.DataFrame, fpath: pathlib.Path, **options) -> None:
         options = dict(engine="pyarrow") | options
         obj.to_parquet(fpath, **options)
 
@@ -152,7 +156,7 @@ class JSONIO(DataIO):
         with open(fpath, "r") as f:
             return json.load(f, **options)
 
-    def _dump(self, obj: dict | list, fpath: pathlib.Path, **options):
+    def _dump(self, obj: dict | list, fpath: pathlib.Path, **options) -> None:
         with open(fpath, "w") as f:
             json.dump(obj, f, **options)
 
@@ -165,7 +169,7 @@ class TOMLIO(DataIO):
         with open(fpath, "rb") as f:
             return tomli.load(f, **options)
 
-    def _dump(self, obj: dict, fpath: pathlib.Path, **options):
+    def _dump(self, obj: dict, fpath: pathlib.Path, **options) -> None:
         with open(fpath, "wb") as f:
             tomli_w.dump(obj, f)
 
