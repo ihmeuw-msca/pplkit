@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pplkit"
-version = "0.1.1"
+version = "0.1.2"
 description = "Pipeline building toolkit"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -12,7 +12,7 @@ license = { file = "LICENSE" }
 authors = [
     { name = "IHME Math Sciences", email = "ihme.math.sciences@gmail.com" },
 ]
-dependencies = ["dill", "pyyaml", "pandas[parquet]", "tomli-w"]
+dependencies = ["dill", "pyyaml", "pandas", "pyarrow", "tomli-w"]
 
 [project.optional-dependencies]
 test = ["pytest", "numpy"]
@@ -25,7 +25,7 @@ github = "https://github.com/ihmeuw-msca/pplkit"
 project = "pplkit"
 author = "IHME Math Sciences"
 copyright = "2026, IHME Math Sciences"
-version = "0.1.1"
+version = "0.1.2"
 
 [tool.ruff]
 line-length = 80
