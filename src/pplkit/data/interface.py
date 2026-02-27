@@ -18,7 +18,7 @@ class DataInterface:
 
     """
 
-    dataio_dict: dict[str, DataIO] = dataio_dict
+    dataio_dict: dict[str, type[DataIO]] = dataio_dict
     """A dictionary that maps the file extensions to the corresponding data io
     class. This is a module-level variable from
     :py:data:`pplkit.data.io.dataio_dict`.

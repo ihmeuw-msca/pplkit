@@ -24,18 +24,24 @@ class DataIO(abc.ABC):
 
     """
 
+    @classmethod
     @abc.abstractmethod
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> typing.Any:
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> typing.Any:
         pass
 
+    @classmethod
     @abc.abstractmethod
     def _dump(
-        self, obj: typing.Any, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: typing.Any,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         pass
 
+    @classmethod
     def load(
-        self, fpath: str | pathlib.Path, **options: typing.Any
+        cls, fpath: str | pathlib.Path, **options: typing.Any
     ) -> typing.Any:
         """Load data from given path.
 
@@ -58,12 +64,13 @@ class DataIO(abc.ABC):
 
         """
         fpath = pathlib.Path(fpath)
-        if fpath.suffix not in self.fextns:
-            raise ValueError(f"File extension must be in {self.fextns}.")
-        return self._load(fpath, **options)
+        if fpath.suffix not in cls.fextns:
+            raise ValueError(f"File extension must be in {cls.fextns}.")
+        return cls._load(fpath, **options)
 
+    @classmethod
     def dump(
-        self,
+        cls,
         obj: typing.Any,
         fpath: str | pathlib.Path,
         mkdir: bool = True,
@@ -90,25 +97,27 @@ class DataIO(abc.ABC):
 
         """
         fpath = pathlib.Path(fpath)
-        if not isinstance(obj, self.dtypes):
-            raise TypeError(f"Data must be an instance of {self.dtypes}.")
+        if not isinstance(obj, cls.dtypes):
+            raise TypeError(f"Data must be an instance of {cls.dtypes}.")
         if mkdir:
             fpath.parent.mkdir(parents=True, exist_ok=True)
-        self._dump(obj, fpath, **options)
-
-    def __repr__(self) -> str:
-        return f"{type(self).__name__}()"
+        cls._dump(obj, fpath, **options)
 
 
 class CSVIO(DataIO):
     fextns: tuple[str, ...] = (".csv",)
     dtypes: tuple[type, ...] = (pd.DataFrame,)
 
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> pd.DataFrame:
+    @classmethod
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> pd.DataFrame:
         return pd.read_csv(fpath, **options)
 
+    @classmethod
     def _dump(
-        self, obj: pd.DataFrame, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: pd.DataFrame,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         options = dict(index=False) | options
         obj.to_csv(fpath, **options)
@@ -117,12 +126,17 @@ class CSVIO(DataIO):
 class PickleIO(DataIO):
     fextns: tuple[str, ...] = (".pkl", ".pickle")
 
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> typing.Any:
+    @classmethod
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> typing.Any:
         with open(fpath, "rb") as f:
             return dill.load(f, **options)
 
+    @classmethod
     def _dump(
-        self, obj: typing.Any, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: typing.Any,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         with open(fpath, "wb") as f:
             dill.dump(obj, f, **options)
@@ -132,13 +146,18 @@ class YAMLIO(DataIO):
     fextns: tuple[str, ...] = (".yml", ".yaml")
     dtypes: tuple[type, ...] = (dict, list)
 
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> dict | list:
+    @classmethod
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> dict | list:
         options = dict(Loader=yaml.SafeLoader) | options
         with open(fpath, "r") as f:
             return yaml.load(f, **options)
 
+    @classmethod
     def _dump(
-        self, obj: dict | list, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: dict | list,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         options = dict(Dumper=yaml.SafeDumper) | options
         with open(fpath, "w") as f:
@@ -149,12 +168,17 @@ class ParquetIO(DataIO):
     fextns: tuple[str, ...] = (".parquet",)
     dtypes: tuple[type, ...] = (pd.DataFrame,)
 
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> pd.DataFrame:
+    @classmethod
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> pd.DataFrame:
         options = dict(engine="pyarrow") | options
         return pd.read_parquet(fpath, **options)
 
+    @classmethod
     def _dump(
-        self, obj: pd.DataFrame, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: pd.DataFrame,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         options = dict(engine="pyarrow") | options
         obj.to_parquet(fpath, **options)
@@ -164,12 +188,17 @@ class JSONIO(DataIO):
     fextns: tuple[str, ...] = (".json",)
     dtypes: tuple[type, ...] = (dict, list)
 
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> dict | list:
+    @classmethod
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> dict | list:
         with open(fpath, "r") as f:
             return json.load(f, **options)
 
+    @classmethod
     def _dump(
-        self, obj: dict | list, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: dict | list,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         with open(fpath, "w") as f:
             json.dump(obj, f, **options)
@@ -179,38 +208,36 @@ class TOMLIO(DataIO):
     fextns: tuple[str, ...] = (".toml",)
     dtypes: tuple[type, ...] = (dict,)
 
-    def _load(self, fpath: pathlib.Path, **options: typing.Any) -> dict:
+    @classmethod
+    def _load(cls, fpath: pathlib.Path, **options: typing.Any) -> dict:
         with open(fpath, "rb") as f:
             return tomllib.load(f, **options)
 
+    @classmethod
     def _dump(
-        self, obj: dict, fpath: pathlib.Path, **options: typing.Any
+        cls,
+        obj: dict,
+        fpath: pathlib.Path,
+        **options: typing.Any,
     ) -> None:
         with open(fpath, "wb") as f:
             tomli_w.dump(obj, f, **options)
 
 
-csvio = CSVIO()
-yamlio = YAMLIO()
-pickleio = PickleIO()
-parquetio = ParquetIO()
-jsonio = JSONIO()
-tomlio = TOMLIO()
-
-_dataio_list: list[DataIO] = [
-    csvio,
-    yamlio,
-    pickleio,
-    parquetio,
-    jsonio,
-    tomlio,
+_dataio_list: list[type[DataIO]] = [
+    CSVIO,
+    YAMLIO,
+    PickleIO,
+    ParquetIO,
+    JSONIO,
+    TOMLIO,
 ]
 
 
-dataio_dict: dict[str, DataIO] = {
+dataio_dict: dict[str, type[DataIO]] = {
     fextn: dataio for dataio in _dataio_list for fextn in dataio.fextns
 }
-"""Instances of data ios, organized in a dictionary with key as the file
+"""Data IO classes, organized in a dictionary with key as the file
 extensions for each :class:`DataIO` class.
 
 """
