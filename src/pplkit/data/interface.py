@@ -1,6 +1,6 @@
-from functools import partial
-from pathlib import Path
-from typing import Any
+import functools
+import pathlib
+import typing
 
 from pplkit.data.io import DataIO, dataio_dict
 
@@ -27,12 +27,14 @@ class DataInterface:
 
     """
 
-    def __init__(self, **dirs: dict[str, str | Path]) -> None:
+    def __init__(self, **dirs: dict[str, str | pathlib.Path]) -> None:
         self.keys = []
         for key, value in dirs.items():
             self.add_dir(key, value)
 
-    def add_dir(self, key: str, value: str | Path, exist_ok: bool = False) -> None:
+    def add_dir(
+        self, key: str, value: str | pathlib.Path, exist_ok: bool = False
+    ) -> None:
         """Add a directory to instance. If the directory already exist
 
         Parameters
@@ -54,9 +56,9 @@ class DataInterface:
         """
         if (not exist_ok) and (key in self.keys):
             raise ValueError(f"{key} already exists")
-        setattr(self, key, Path(value))
-        setattr(self, f"load_{key}", partial(self.load, key=key))
-        setattr(self, f"dump_{key}", partial(self.dump, key=key))
+        setattr(self, key, pathlib.Path(value))
+        setattr(self, f"load_{key}", functools.partial(self.load, key=key))
+        setattr(self, f"dump_{key}", functools.partial(self.dump, key=key))
         if key not in self.keys:
             self.keys.append(key)
 
@@ -75,7 +77,7 @@ class DataInterface:
             delattr(self, f"dump_{key}")
             self.keys.remove(key)
 
-    def get_fpath(self, *fparts: tuple[str, ...], key: str = "") -> Path:
+    def get_fpath(self, *fparts: tuple[str, ...], key: str = "") -> pathlib.Path:
         """Get the file path from the name of the directory and the sub-parts
         under the directory.
 
@@ -87,11 +89,11 @@ class DataInterface:
             The name of the directory stored in the class.
 
         """
-        return getattr(self, key, Path(".")) / "/".join(map(str, fparts))
+        return getattr(self, key, pathlib.Path(".")) / "/".join(map(str, fparts))
 
     def load(
-        self, *fparts: tuple[str, ...], key: str = "", **options: dict[str, Any]
-    ) -> Any:
+        self, *fparts: tuple[str, ...], key: str = "", **options: dict[str, typing.Any]
+    ) -> typing.Any:
         """Load data from given directory.
 
         Parameters
@@ -114,11 +116,11 @@ class DataInterface:
 
     def dump(
         self,
-        obj: Any,
+        obj: typing.Any,
         *fparts: str,
         key: str = "",
         mkdir: bool = True,
-        **options: dict[str, Any],
+        **options: dict[str, typing.Any],
     ):
         """Dump data to the given directory.
 
