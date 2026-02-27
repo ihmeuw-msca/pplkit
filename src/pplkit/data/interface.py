@@ -27,7 +27,7 @@ class DataInterface:
 
     """
 
-    def __init__(self, **dirs: dict[str, str | pathlib.Path]) -> None:
+    def __init__(self, **dirs: str | pathlib.Path) -> None:
         self.keys = []
         for key, value in dirs.items():
             self.add_dir(key, value)
@@ -77,7 +77,7 @@ class DataInterface:
             delattr(self, f"dump_{key}")
             self.keys.remove(key)
 
-    def get_fpath(self, *fparts: tuple[str, ...], key: str = "") -> pathlib.Path:
+    def get_fpath(self, *fparts: str, key: str = "") -> pathlib.Path:
         """Get the file path from the name of the directory and the sub-parts
         under the directory.
 
@@ -89,10 +89,12 @@ class DataInterface:
             The name of the directory stored in the class.
 
         """
-        return getattr(self, key, pathlib.Path(".")) / "/".join(map(str, fparts))
+        return getattr(self, key, pathlib.Path(".")) / "/".join(
+            map(str, fparts)
+        )
 
     def load(
-        self, *fparts: tuple[str, ...], key: str = "", **options: dict[str, typing.Any]
+        self, *fparts: str, key: str = "", **options: typing.Any
     ) -> typing.Any:
         """Load data from given directory.
 
@@ -120,7 +122,7 @@ class DataInterface:
         *fparts: str,
         key: str = "",
         mkdir: bool = True,
-        **options: dict[str, typing.Any],
+        **options: typing.Any,
     ):
         """Dump data to the given directory.
 
