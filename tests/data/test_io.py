@@ -1,5 +1,4 @@
-import shutil
-from pathlib import Path
+import pathlib
 
 import numpy as np
 import pandas as pd
@@ -7,72 +6,83 @@ import pytest
 
 from pplkit.data.io import CSVIO, JSONIO, TOMLIO, YAMLIO, ParquetIO, PickleIO
 
-tmpdir = Path(__file__).parents[1] / "tmp"
-
-
-@pytest.fixture(scope="class", autouse=True)
-def rm_tmpdir_after_tests():
-    yield
-    if tmpdir.exists():
-        shutil.rmtree(tmpdir)
-
 
 @pytest.fixture
-def data():
+def data() -> dict[str, list[int]]:
     return {"a": [1, 2, 3], "b": [4, 5, 6]}
 
 
-def test_csvio(data):
-    data = pd.DataFrame(data)
+def test_csvio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
+    df = pd.DataFrame(data)
     port = CSVIO()
-    port.dump(data, tmpdir / "file.csv")
-    loaded_data = port.load(tmpdir / "file.csv")
+    port.dump(df, tmp_path / "file.csv")
+    loaded_data = port.load(tmp_path / "file.csv")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
 
 
-def test_jsonio(data):
+def test_jsonio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
     port = JSONIO()
-    port.dump(data, tmpdir / "file.json")
-    loaded_data = port.load(tmpdir / "file.json")
+    port.dump(data, tmp_path / "file.json")
+    loaded_data = port.load(tmp_path / "file.json")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
 
 
-def test_yamlio(data):
+def test_yamlio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
     port = YAMLIO()
-    port.dump(data, tmpdir / "file.yaml")
-    loaded_data = port.load(tmpdir / "file.yaml")
+    port.dump(data, tmp_path / "file.yaml")
+    loaded_data = port.load(tmp_path / "file.yaml")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
 
 
-def test_parquetio(data):
-    data = pd.DataFrame(data)
+def test_parquetio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
+    df = pd.DataFrame(data)
     port = ParquetIO()
-    port.dump(data, tmpdir / "file.parquet")
-    loaded_data = port.load(tmpdir / "file.parquet")
+    port.dump(df, tmp_path / "file.parquet")
+    loaded_data = port.load(tmp_path / "file.parquet")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
 
 
-def test_pickleio(data):
+def test_pickleio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
     port = PickleIO()
-    port.dump(data, tmpdir / "file.pkl")
-    loaded_data = port.load(tmpdir / "file.pkl")
+    port.dump(data, tmp_path / "file.pkl")
+    loaded_data = port.load(tmp_path / "file.pkl")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
 
 
-def test_tomlio(data):
+def test_tomlio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
     port = TOMLIO()
-    port.dump(data, tmpdir / "file.toml")
-    loaded_data = port.load(tmpdir / "file.toml")
+    port.dump(data, tmp_path / "file.toml")
+    loaded_data = port.load(tmp_path / "file.toml")
 
     for key in ["a", "b"]:
         assert np.allclose(data[key], loaded_data[key])
+
+
+def test_load_invalid_extension(tmp_path: pathlib.Path) -> None:
+    port = CSVIO()
+    fpath = tmp_path / "file.txt"
+    fpath.touch()
+    with pytest.raises(ValueError, match="File extension must be in"):
+        port.load(fpath)
+
+
+def test_dump_invalid_type(tmp_path: pathlib.Path) -> None:
+    port = CSVIO()
+    with pytest.raises(TypeError, match="Data must be an instance of"):
+        port.dump({"a": 1}, tmp_path / "file.csv")
+
+
+def test_load_missing_file(tmp_path: pathlib.Path) -> None:
+    port = JSONIO()
+    with pytest.raises(FileNotFoundError):
+        port.load(tmp_path / "nonexistent.json")
