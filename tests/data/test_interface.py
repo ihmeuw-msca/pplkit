@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pplkit.data.interface import DataInterface
+from pplkit.data import DataInterface
 
 tmpdir = Path(__file__).parents[1] / "tmp"
 
@@ -22,7 +22,9 @@ def rm_tmpdir_after_tests():
         shutil.rmtree(tmpdir)
 
 
-@pytest.mark.parametrize("fextn", [".json", ".yaml", ".pkl", ".csv", ".parquet"])
+@pytest.mark.parametrize(
+    "fextn", [".json", ".yaml", ".pkl", ".csv", ".parquet", ".toml"]
+)
 def test_data_interface(data, fextn):
     dataif = DataInterface(tmp=tmpdir)
     if fextn in [".csv", ".parquet"]:

@@ -12,10 +12,10 @@ license = { file = "LICENSE" }
 authors = [
     { name = "IHME Math Sciences", email = "ihme.math.sciences@gmail.com" },
 ]
-dependencies = ["dill", "pyyaml", "pandas[parquet]", "tomli", "tomli-w"]
+dependencies = ["dill", "pyyaml", "pandas[parquet]", "tomli-w"]
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "numpy"]
 docs = ["sphinx", "sphinx-autodoc-typehints", "furo"]
 
 [project.urls]
