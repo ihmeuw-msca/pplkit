@@ -2,7 +2,7 @@ import functools
 import pathlib
 import typing
 
-from pplkit.data.io import DataIO, dataio_dict
+from pplkit.data.io import SUFFIX_TO_IO
 
 
 class DataInterface:
@@ -15,15 +15,6 @@ class DataInterface:
         Directories to manage with directory's name as the name of the keyword
         argument's name and directory's path as the value of the keyword
         argument's value.
-
-    """
-
-    dataio_dict: dict[str, type[DataIO]] = dataio_dict
-    """A dictionary that maps the file extensions to the corresponding data io
-    class. This is a module-level variable from
-    :py:data:`pplkit.data.io.dataio_dict`.
-
-    :meta hide-value:
 
     """
 
@@ -114,7 +105,7 @@ class DataInterface:
 
         """
         fpath = self.get_fpath(*fparts, key=key)
-        return self.dataio_dict[fpath.suffix].load(fpath, **options)
+        return SUFFIX_TO_IO[fpath.suffix].load(fpath, **options)
 
     def dump(
         self,
@@ -142,7 +133,7 @@ class DataInterface:
 
         """
         fpath = self.get_fpath(*fparts, key=key)
-        self.dataio_dict[fpath.suffix].dump(obj, fpath, mkdir=mkdir, **options)
+        SUFFIX_TO_IO[fpath.suffix].dump(obj, fpath, mkdir=mkdir, **options)
 
     def __repr__(self) -> str:
         expr = f"{type(self).__name__}(\n"
