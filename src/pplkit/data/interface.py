@@ -2,7 +2,15 @@ import os
 import pathlib
 import typing
 
-from pplkit.data.io import SUFFIX_TO_IO
+from pplkit.data.io import (
+    get_default_loader,
+    get_dumper,
+    get_dumper_obj_types,
+    get_loader,
+    get_loader_obj_types,
+    resolve_obj_type,
+    resolve_suffix,
+)
 
 type PathLike = str | os.PathLike[str]
 
@@ -56,6 +64,8 @@ class DataInterface:
         self,
         sub_path: PathLike,
         key: str | None = None,
+        obj_type: type | None = None,
+        suffix: str | None = None,
         **options: typing.Any,
     ) -> typing.Any:
         """Load data from a file. The file format is inferred from the suffix.
@@ -68,8 +78,14 @@ class DataInterface:
         key
             Name of a registered directory. If ``None``, ``sub_path`` is
             used as-is.
+        obj_type
+            Desired object type for the loaded data. If ``None``, the
+            default loader for the suffix is used.
+        suffix
+            Override the file suffix for format resolution. If ``None``,
+            the suffix is inferred from ``sub_path``.
         options
-            Extra keyword arguments passed to the underlying ``IO`` class.
+            Extra keyword arguments passed to the underlying loader.
 
         Returns
         -------
@@ -78,7 +94,15 @@ class DataInterface:
 
         """
         path = self[key] / sub_path
-        return SUFFIX_TO_IO[path.suffix].load(path, **options)
+        resolved_suffix = resolve_suffix(suffix or path.suffix)
+        if obj_type is None:
+            loader = get_default_loader(resolved_suffix)
+        else:
+            obj_type = resolve_obj_type(
+                obj_type, get_loader_obj_types(resolved_suffix)
+            )
+            loader = get_loader(resolved_suffix, obj_type)
+        return loader(path, **options)
 
     def dump(
         self,
@@ -86,6 +110,7 @@ class DataInterface:
         sub_path: PathLike,
         key: str | None = None,
         mkdir: bool = True,
+        suffix: str | None = None,
         **options: typing.Any,
     ) -> None:
         """Dump data to a file. The file format is inferred from the suffix.
@@ -103,12 +128,22 @@ class DataInterface:
         mkdir
             If ``True``, automatically create the parent directory. Default
             is ``True``.
+        suffix
+            Override the file suffix for format resolution. If ``None``,
+            the suffix is inferred from ``sub_path``.
         options
-            Extra keyword arguments passed to the underlying ``IO`` class.
+            Extra keyword arguments passed to the underlying dumper.
 
         """
         path = self[key] / sub_path
-        SUFFIX_TO_IO[path.suffix].dump(obj, path, mkdir=mkdir, **options)
+        if mkdir:
+            path.parent.mkdir(parents=True, exist_ok=True)
+        resolved_suffix = resolve_suffix(suffix or path.suffix)
+        obj_type = resolve_obj_type(
+            type(obj), get_dumper_obj_types(resolved_suffix)
+        )
+        dumper = get_dumper(resolved_suffix, obj_type)
+        dumper(obj, path, **options)
 
     def __repr__(self) -> str:
         items = ", ".join(
