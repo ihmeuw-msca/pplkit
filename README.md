@@ -23,8 +23,8 @@ from pplkit.data import DataInterface
 dataif = DataInterface(input="path/to/input", output="path/to/output")
 
 # Load data based on file extension
-data = dataif.load_input("data.csv")
+data = dataif.load("data.csv", key="input")
 
 # Dump data based on file extension
-dataif.dump_output(data, "data.parquet")
+dataif.dump(data, "data.parquet", key="output")
 ```
