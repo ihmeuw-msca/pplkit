@@ -1,102 +1,75 @@
-import functools
+import os
 import pathlib
 import typing
 
 from pplkit.data.io import SUFFIX_TO_IO
 
+type PathLike = str | os.PathLike[str]
+
 
 class DataInterface:
-    """Data interface that store important directories and automatically read
-    and write data to the stored directories based on their data types.
+    """Data interface that manages named directories and automatically reads
+    and writes data based on file extension.
+
+    Directories are registered by name and accessed via bracket notation.
+    Values are coerced to ``pathlib.Path`` on insertion.
 
     Parameters
     ----------
-    dirs
-        Directories to manage with directory's name as the name of the keyword
-        argument's name and directory's path as the value of the keyword
-        argument's value.
+    paths
+        Directories to manage, passed as keyword arguments.
+
+    Examples
+    --------
+    >>> dataif = DataInterface(raw="/data/raw", output="/data/output")
+    >>> dataif["raw"]
+    PosixPath('/data/raw')
+    >>> dataif.dump(obj, "file.csv", key="raw")
+    >>> dataif.load("file.csv", key="raw")
 
     """
 
-    def __init__(self, **dirs: str | pathlib.Path) -> None:
-        self.keys: list[str] = []
-        for key, value in dirs.items():
-            self.add_dir(key, value)
+    def __init__(self, **paths: PathLike) -> None:
+        self._paths: dict[str, pathlib.Path] = {}
+        for key, value in paths.items():
+            self[key] = value
 
-    def add_dir(
-        self, key: str, value: str | pathlib.Path, exist_ok: bool = False
-    ) -> None:
-        """Add a directory to instance. If the directory already exist
+    def __getitem__(self, key: str | None) -> pathlib.Path:
+        if key is None:
+            return pathlib.Path()
+        return self._paths[key]
 
-        Parameters
-        ----------
-        key
-            Directory name.
-        value
-            Directory path.
-        exist_ok
-            If ``exist_ok=True`` and ``key`` already exists in the current
-            instance it will raise an error. Otherwise it will overwrite the
-            path corresponding to the ``key``.
+    def __setitem__(self, key: str, value: PathLike) -> None:
+        if not isinstance(key, str):
+            raise TypeError(
+                f"DataInterface key must be a 'str', not {type(key).__name__!r}"
+            )
+        self._paths[key] = pathlib.Path(value)
 
-        Raises
-        ------
-        ValueError
-            Raised when ``exist_ok=False`` and ``key`` already exists.
+    def __delitem__(self, key: str) -> None:
+        del self._paths[key]
 
-        """
-        if (not exist_ok) and (key in self.keys):
-            raise ValueError(f"{key} already exists")
-        setattr(self, key, pathlib.Path(value))
-        setattr(self, f"load_{key}", functools.partial(self.load, key=key))
-        setattr(self, f"dump_{key}", functools.partial(self.dump, key=key))
-        if key not in self.keys:
-            self.keys.append(key)
-
-    def remove_dir(self, key: str) -> None:
-        """Remove a directory from the current set of directories.
-
-        Parameters
-        ----------
-        key
-            Directory name
-
-        """
-        if key in self.keys:
-            delattr(self, key)
-            delattr(self, f"load_{key}")
-            delattr(self, f"dump_{key}")
-            self.keys.remove(key)
-
-    def get_fpath(self, *fparts: str, key: str = "") -> pathlib.Path:
-        """Get the file path from the name of the directory and the sub-parts
-        under the directory.
-
-        Parameters
-        ----------
-        fparts
-            Subdirectories or the file name.
-        key
-            The name of the directory stored in the class.
-
-        """
-        return getattr(self, key, pathlib.Path(".")) / "/".join(
-            map(str, fparts)
-        )
+    def __len__(self) -> int:
+        return len(self._paths)
 
     def load(
-        self, *fparts: str, key: str = "", **options: typing.Any
+        self,
+        sub_path: PathLike,
+        key: str | None = None,
+        **options: typing.Any,
     ) -> typing.Any:
-        """Load data from given directory.
+        """Load data from a file. The file format is inferred from the suffix.
 
         Parameters
         ----------
-        fparts
-            Subdirectories or the file name.
+        sub_path
+            Relative path to the file under the registered directory. If
+            ``key`` is ``None``, this is used as the full path.
         key
-            The name of the directory stored in the class.
+            Name of a registered directory. If ``None``, ``sub_path`` is
+            used as-is.
         options
-            Extra arguments for the load function.
+            Extra keyword arguments passed to the underlying ``IO`` class.
 
         Returns
         -------
@@ -104,40 +77,41 @@ class DataInterface:
             Data loaded from the given path.
 
         """
-        fpath = self.get_fpath(*fparts, key=key)
-        return SUFFIX_TO_IO[fpath.suffix].load(fpath, **options)
+        path = self[key] / sub_path
+        return SUFFIX_TO_IO[path.suffix].load(path, **options)
 
     def dump(
         self,
         obj: typing.Any,
-        *fparts: str,
-        key: str = "",
+        sub_path: PathLike,
+        key: str | None = None,
         mkdir: bool = True,
         **options: typing.Any,
     ) -> None:
-        """Dump data to the given directory.
+        """Dump data to a file. The file format is inferred from the suffix.
 
         Parameters
         ----------
         obj
-            Provided data object.
-        fparts
-            Subdirectories or the file name.
+            Data object to write.
+        sub_path
+            Relative path to the file under the registered directory. If
+            ``key`` is ``None``, this is used as the full path.
         key
-            The name of the directory stored in the class.
+            Name of a registered directory. If ``None``, ``sub_path`` is
+            used as-is.
         mkdir
-            If true, it will automatically create the parent directory. The
-            default is true.
+            If ``True``, automatically create the parent directory. Default
+            is ``True``.
         options
-            Extra arguments for the dump function.
+            Extra keyword arguments passed to the underlying ``IO`` class.
 
         """
-        fpath = self.get_fpath(*fparts, key=key)
-        SUFFIX_TO_IO[fpath.suffix].dump(obj, fpath, mkdir=mkdir, **options)
+        path = self[key] / sub_path
+        SUFFIX_TO_IO[path.suffix].dump(obj, path, mkdir=mkdir, **options)
 
     def __repr__(self) -> str:
-        expr = f"{type(self).__name__}(\n"
-        for key in self.keys:
-            expr += f"    {key}={getattr(self, key)},\n"
-        expr += ")"
-        return expr
+        items = ", ".join(
+            f"{key}='{value}'" for key, value in self._paths.items()
+        )
+        return f"{type(self).__name__}({items})"
