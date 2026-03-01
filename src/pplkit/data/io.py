@@ -79,16 +79,16 @@ class IORegistry:
 
     ``IORegistry`` is not used directly; instead use :class:`LoaderRegistry`
     and :class:`DumperRegistry`, which inherit the shared machinery and
-    maintain their own independent ``_io`` / ``_io_obj_types`` dictionaries.
+    maintain their own independent ``_handlers`` / ``_obj_types`` dictionaries.
 
     Class Attributes
     ----------------
     _suffix_aliases
         Maps alternative extensions to their canonical form.
-    _io
+    _handlers
         Maps ``(suffix, obj_type)`` pairs to I/O callables.  Defined
         concretely in each subclass.
-    _io_obj_types
+    _obj_types
         Tracks registered object types per suffix, ordered so that the
         *most specific* types come first and the catch-all (``object``)
         comes last.
@@ -96,8 +96,8 @@ class IORegistry:
     """
 
     _suffix_aliases: dict[SuffixAlias, Suffix] = {}
-    _io: dict[tuple[Suffix, type], typing.Callable]
-    _io_obj_types: dict[Suffix, list[type]]
+    _handlers: dict[tuple[Suffix, type], typing.Callable]
+    _obj_types: dict[Suffix, list[type]]
 
     @classmethod
     def register_suffix_alias(
@@ -129,8 +129,8 @@ class IORegistry:
         Returns
         -------
         Callable
-            A decorator that records the wrapped function in ``cls._io`` and
-            updates ``cls._io_obj_types``.
+            A decorator that records the wrapped function in ``cls._handlers`` and
+            updates ``cls._obj_types``.
 
         Examples
         --------
@@ -140,14 +140,14 @@ class IORegistry:
 
         """
 
-        def register_io_decorator(
-            io: typing.Callable,
+        def register_handler_decorator(
+            handler: typing.Callable,
         ) -> typing.Callable:
-            cls._io[(suffix, obj_type)] = io
-            cls._register_obj_type(suffix, obj_type, cls._io_obj_types)
-            return io
+            cls._handlers[(suffix, obj_type)] = handler
+            cls._register_obj_type(suffix, obj_type)
+            return handler
 
-        return register_io_decorator
+        return register_handler_decorator
 
     @classmethod
     def _resolve_suffix(cls, suffix: Suffix) -> str:
@@ -159,31 +159,25 @@ class IORegistry:
         """
         return cls._suffix_aliases.get(suffix, suffix)
 
-    @staticmethod
-    def _register_obj_type(
-        suffix: Suffix,
-        obj_type: type,
-        object_type_registry: dict[Suffix, list[type]],
-    ) -> None:
-        """Insert *obj_type* into *object_type_registry* for *suffix*.
+    @classmethod
+    def _register_obj_type(cls, suffix: Suffix, obj_type: type) -> None:
+        """Insert *obj_type* into the registry for *suffix*.
 
         Concrete types are prepended (so the most specific type is found
         first), while the generic ``object`` sentinel is appended so it
         acts as the default / catch-all.
 
         """
-        obj_types = object_type_registry.get(suffix, [])
+        obj_types = cls._obj_types.get(suffix, [])
         if obj_type not in obj_types:
             if obj_type is object:
                 obj_types.append(obj_type)
             else:
                 obj_types.insert(0, obj_type)
-        object_type_registry[suffix] = obj_types
+        cls._obj_types[suffix] = obj_types
 
-    @staticmethod
-    def _resolve_obj_type(
-        obj_type: type | None, registered_obj_types: list[type]
-    ) -> type:
+    @classmethod
+    def _resolve_obj_type(cls, suffix: Suffix, obj_type: type | None) -> type:
         """Resolve *obj_type* against a list of registered types.
 
         Resolution strategy:
@@ -197,10 +191,10 @@ class IORegistry:
 
         Parameters
         ----------
+        suffix
+            Canonical file extension used to look up registered types.
         obj_type
             The desired type, or ``None`` to get the default.
-        registered_obj_types
-            The ordered list of types registered for a given suffix.
 
         Returns
         -------
@@ -213,6 +207,7 @@ class IORegistry:
             If no registered type matches *obj_type*.
 
         """
+        registered_obj_types = cls._obj_types[suffix]
         if obj_type is None:
             return registered_obj_types[-1]
         if obj_type in registered_obj_types:
@@ -226,15 +221,17 @@ class IORegistry:
         )
 
     @classmethod
-    def _get_io(cls, suffix: Suffix, obj_type: type | None) -> typing.Callable:
+    def _get_handler(
+        cls, suffix: Suffix, obj_type: type | None
+    ) -> typing.Callable:
         """Return the I/O callable for *suffix* and *obj_type*.
 
         Resolves aliases and object-type fallback before look-up.
 
         """
         suffix = cls._resolve_suffix(suffix)
-        obj_type = cls._resolve_obj_type(obj_type, cls._io_obj_types[suffix])
-        return cls._io[(suffix, obj_type)]
+        obj_type = cls._resolve_obj_type(suffix, obj_type)
+        return cls._handlers[(suffix, obj_type)]
 
 
 class LoaderRegistry(IORegistry):
@@ -245,8 +242,8 @@ class LoaderRegistry(IORegistry):
 
     """
 
-    _io: dict[tuple[Suffix, type], Loader[typing.Any]] = {}
-    _io_obj_types: dict[Suffix, list[type]] = {}
+    _handlers: dict[tuple[Suffix, type], Loader[typing.Any]] = {}
+    _obj_types: dict[Suffix, list[type]] = {}
 
     @classmethod
     def get_loader(
@@ -268,7 +265,7 @@ class LoaderRegistry(IORegistry):
             A callable ``(path, **options) -> obj``.
 
         """
-        return cls._get_io(suffix=suffix, obj_type=obj_type)
+        return cls._get_handler(suffix=suffix, obj_type=obj_type)
 
 
 class DumperRegistry(IORegistry):
@@ -279,8 +276,8 @@ class DumperRegistry(IORegistry):
 
     """
 
-    _io: dict[tuple[Suffix, type], Dumper[typing.Any]] = {}
-    _io_obj_types: dict[Suffix, list[type]] = {}
+    _handlers: dict[tuple[Suffix, type], Dumper[typing.Any]] = {}
+    _obj_types: dict[Suffix, list[type]] = {}
 
     @classmethod
     def get_dumper(cls, suffix: Suffix, obj_type: type) -> Dumper[typing.Any]:
@@ -299,7 +296,7 @@ class DumperRegistry(IORegistry):
             A callable ``(obj, path, **options) -> None``.
 
         """
-        return cls._get_io(suffix, obj_type)
+        return cls._get_handler(suffix, obj_type)
 
 
 @LoaderRegistry.register(".csv", pd.DataFrame)

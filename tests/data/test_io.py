@@ -47,20 +47,21 @@ class TestResolveObjType:
     """Tests for ``IORegistry._resolve_obj_type``."""
 
     def test_exact_match(self) -> None:
-        assert IORegistry._resolve_obj_type(dict, [dict, object]) is dict
+        assert (
+            LoaderRegistry._resolve_obj_type(".csv", pd.DataFrame)
+            is pd.DataFrame
+        )
 
     def test_subclass_fallback(self) -> None:
-        assert IORegistry._resolve_obj_type(dict, [object]) is object
+        assert LoaderRegistry._resolve_obj_type(".pkl", dict) is object
 
     def test_none_returns_last_registered(self) -> None:
         """When *obj_type* is ``None`` the last (default) entry is returned."""
-        assert (
-            IORegistry._resolve_obj_type(None, [pd.DataFrame, object]) is object
-        )
+        assert LoaderRegistry._resolve_obj_type(".json", None) is object
 
     def test_no_match_raises(self) -> None:
         with pytest.raises(TypeError, match="Cannot resolve"):
-            IORegistry._resolve_obj_type(int, [pd.DataFrame])
+            LoaderRegistry._resolve_obj_type(".csv", int)
 
 
 # ---------------------------------------------------------------------------
@@ -84,11 +85,11 @@ class TestLoaderRegistry:
             LoaderRegistry.get_loader(".csv", obj_type=int)
 
     def test_loader_obj_types_csv(self) -> None:
-        obj_types = LoaderRegistry._io_obj_types[".csv"]
+        obj_types = LoaderRegistry._obj_types[".csv"]
         assert pd.DataFrame in obj_types
 
     def test_loader_obj_types_json_has_object(self) -> None:
-        obj_types = LoaderRegistry._io_obj_types[".json"]
+        obj_types = LoaderRegistry._obj_types[".json"]
         assert object in obj_types
 
 
