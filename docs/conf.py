@@ -10,21 +10,22 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
 import tomllib
 
 with open("../pyproject.toml", "rb") as f:
-    meta = tomllib.load(f)["tool"]["sphinx"]
+    about = tomllib.load(f)["project"]
 
 
 # -- Project information -----------------------------------------------------
 
-project = meta["project"]
-author = meta["author"]
-copyright = meta["copyright"]
+project = about["name"]
+author = ", ".join([info["name"] for info in about["authors"]])
+copyright = f"2024-{datetime.datetime.today().year}, {author}"
 
 
 # The full version, including alpha/beta/rc tags
-version = meta["version"]
+version = about["version"]
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,14 +42,22 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
+    "sphinx_autodoc_typehints",
 ]
-autodoc_typehints = "description"
+autodoc_typehints = "none"
+napoleon_use_rtype = False
+typehints_use_rtype = False
 autodoc_member_order = "bysource"
+autodoc_type_aliases = {
+    "ArrayLike": "ArrayLike",
+    "NDArray": "NDArray",
+    "DataFrame": "DataFrame",
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
-# list of patterns, relative to source directory, that match files and
+# List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]

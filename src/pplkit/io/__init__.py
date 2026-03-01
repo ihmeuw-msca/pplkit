@@ -1,9 +1,17 @@
 from .manager import IOManager
-from .registry import DumperRegistry, IORegistry, LoaderRegistry
+from .registry import (
+    get_dumper,
+    get_loader,
+    register_dumper,
+    register_loader,
+    register_suffix_alias,
+)
 
 __all__ = [
-    "DumperRegistry",
     "IOManager",
-    "IORegistry",
-    "LoaderRegistry",
+    "get_dumper",
+    "get_loader",
+    "register_dumper",
+    "register_loader",
+    "register_suffix_alias",
 ]
