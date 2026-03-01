@@ -3,6 +3,6 @@ API Reference
 
 .. toctree::
    :maxdepth: 2
-   :glob:
 
-   *
+   pplkit.io.manager
+   pplkit.io.registry

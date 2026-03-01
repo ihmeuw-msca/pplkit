@@ -1,8 +1,9 @@
 """High-level I/O manager for reading and writing files by directory key.
 
-:class:`IOManager` pairs named directory paths with the registry-based
-I/O layer in :mod:`pplkit.io.registry` so that callers can load and dump
-data with a single call, e.g.
+:class:`IOManager` pairs named directory paths with the module-level
+:func:`~pplkit.io.registry.get_loader` and
+:func:`~pplkit.io.registry.get_dumper` functions so that callers can load
+and dump data with a single call, e.g.
 
 >>> iom = IOManager(raw="/data/raw", output="/data/output")
 >>> iom.dump(my_df, "results.csv", key="output")
@@ -16,7 +17,7 @@ import os
 import pathlib
 import typing
 
-from pplkit.io.registry import DumperRegistry, LoaderRegistry
+from pplkit.io.registry import get_dumper, get_loader
 
 type PathLike = str | os.PathLike[str]
 """A string or :class:`os.PathLike` that can be coerced to a
@@ -86,7 +87,6 @@ class IOManager:
 
         Returns
         -------
-        Any
             Data loaded from the given path.
 
         Raises
@@ -98,9 +98,7 @@ class IOManager:
 
         """
         path = self[key] / sub_path
-        loader = LoaderRegistry.get_loader(
-            suffix=suffix or path.suffix, obj_type=obj_type
-        )
+        loader = get_loader(suffix=suffix or path.suffix, obj_type=obj_type)
         return loader(path, **options)
 
     def dump(
@@ -145,9 +143,7 @@ class IOManager:
         path = self[key] / sub_path
         if mkdir:
             path.parent.mkdir(parents=True, exist_ok=True)
-        dumper = DumperRegistry.get_dumper(
-            suffix=suffix or path.suffix, obj_type=type(obj)
-        )
+        dumper = get_dumper(suffix=suffix or path.suffix, obj_type=type(obj))
         dumper(obj, path, **options)
 
     def __getitem__(self, key: str | None) -> pathlib.Path:
@@ -164,7 +160,6 @@ class IOManager:
 
         Returns
         -------
-        pathlib.Path
             The registered directory path (or ``Path()`` when *key* is
             ``None``).
 

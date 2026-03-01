@@ -21,12 +21,6 @@ docs = ["sphinx", "sphinx-autodoc-typehints", "furo"]
 [project.urls]
 github = "https://github.com/ihmeuw-msca/pplkit"
 
-[tool.sphinx]
-project = "pplkit"
-author = "IHME Math Sciences"
-copyright = "2026, IHME Math Sciences"
-version = "0.1.2"
-
 [tool.ruff]
 line-length = 80
 src = ["src"]

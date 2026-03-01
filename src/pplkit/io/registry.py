@@ -1,16 +1,21 @@
 """Registry-based I/O layer for loading and dumping data by file extension.
 
-This module defines three class-level registries:
+This module provides five public functions for working with file-based I/O:
 
-* :class:`IORegistry` – shared base with suffix-alias resolution, object-type
-  resolution, and a ``register`` decorator.
-* :class:`LoaderRegistry` – concrete registry for **loaders** (file → object).
-* :class:`DumperRegistry` – concrete registry for **dumpers** (object → file).
+* :func:`register_suffix_alias` – map an alternative file extension to a
+  canonical one (e.g. ``.yml`` → ``.yaml``).
+* :func:`register_loader` – decorator that registers a loader for a given
+  suffix and object type.
+* :func:`register_dumper` – decorator that registers a dumper for a given
+  suffix and object type.
+* :func:`get_loader` – retrieve a loader callable by suffix (and optional
+  object type).
+* :func:`get_dumper` – retrieve a dumper callable by suffix and object type.
 
 Loader/dumper functions for CSV, Pickle, YAML, Parquet, JSON, and TOML are
 registered at module import time, so callers can immediately do:
 
->>> loader = LoaderRegistry.get_loader(".json")
+>>> loader = get_loader(".json")
 >>> data = loader(some_path)
 
 Suffix aliases (e.g. ``.pickle`` → ``.pkl``, ``.yml`` → ``.yaml``) are also
@@ -36,62 +41,48 @@ type SuffixAlias = str
 
 
 class Loader[T](typing.Protocol):
-    """Callable protocol for a *loader*: reads a file and returns an object.
+    def __call__(self, path: pathlib.Path, **options: typing.Any) -> T:
+        """Callable protocol for a *loader*: reads a file and returns an object.
 
-    Parameters
-    ----------
-    path
-        Path to the file to read.
-    options
-        Format-specific keyword arguments forwarded to the underlying reader.
+        Parameters
+        ----------
+        path
+            Path to the file to read.
+        options
+            Format-specific keyword arguments forwarded to the underlying reader.
 
-    Returns
-    -------
-    T
-        The deserialised object.
+        Returns
+        -------
+            The deserialised object.
 
-    """
-
-    def __call__(self, path: pathlib.Path, **options: typing.Any) -> T: ...
+        """
 
 
 class Dumper[T](typing.Protocol):
-    """Callable protocol for a *dumper*: writes an object to a file.
-
-    Parameters
-    ----------
-    obj
-        The object to serialise.
-    path
-        Destination file path.
-    options
-        Format-specific keyword arguments forwarded to the underlying writer.
-
-    """
-
     def __call__(
         self, obj: T, path: pathlib.Path, **options: typing.Any
-    ) -> None: ...
+    ) -> None:
+        """Callable protocol for a *dumper*: writes an object to a file.
+
+        Parameters
+        ----------
+        obj
+            The object to serialise.
+        path
+            Destination file path.
+        options
+            Format-specific keyword arguments forwarded to the underlying writer.
+
+        """
 
 
-class IORegistry:
+class _IORegistry:
     """Base class for suffix-aware I/O registries.
 
-    ``IORegistry`` is not used directly; instead use :class:`LoaderRegistry`
-    and :class:`DumperRegistry`, which inherit the shared machinery and
-    maintain their own independent ``_handlers`` / ``_obj_types`` dictionaries.
-
-    Class Attributes
-    ----------------
-    _suffix_aliases
-        Maps alternative extensions to their canonical form.
-    _handlers
-        Maps ``(suffix, obj_type)`` pairs to I/O callables.  Defined
-        concretely in each subclass.
-    _obj_types
-        Tracks registered object types per suffix, ordered so that the
-        *most specific* types come first and the catch-all (``object``)
-        comes last.
+    This is an internal implementation detail.  Users should interact with the
+    module-level functions :func:`register_suffix_alias`,
+    :func:`register_loader`, :func:`register_dumper`, :func:`get_loader`, and
+    :func:`get_dumper` instead.
 
     """
 
@@ -128,13 +119,12 @@ class IORegistry:
 
         Returns
         -------
-        Callable
-            A decorator that records the wrapped function in ``cls._handlers`` and
-            updates ``cls._obj_types``.
+            A decorator that records the wrapped function and updates the
+            internal handler registry.
 
         Examples
         --------
-        >>> @LoaderRegistry.register(".csv", pd.DataFrame)
+        >>> @register_loader(".csv", pd.DataFrame)
         ... def load_csv(path, **options):
         ...     return pd.read_csv(path, **options)
 
@@ -151,23 +141,10 @@ class IORegistry:
 
     @classmethod
     def _resolve_suffix(cls, suffix: Suffix) -> str:
-        """Return the canonical suffix for *suffix*.
-
-        If *suffix* is a known alias the canonical form is returned;
-        otherwise *suffix* is returned unchanged.
-
-        """
         return cls._suffix_aliases.get(suffix, suffix)
 
     @classmethod
     def _register_obj_type(cls, suffix: Suffix, obj_type: type) -> None:
-        """Insert *obj_type* into the registry for *suffix*.
-
-        Concrete types are prepended (so the most specific type is found
-        first), while the generic ``object`` sentinel is appended so it
-        acts as the default / catch-all.
-
-        """
         obj_types = cls._obj_types.get(suffix, [])
         if obj_type not in obj_types:
             if obj_type is object:
@@ -178,35 +155,6 @@ class IORegistry:
 
     @classmethod
     def _resolve_obj_type(cls, suffix: Suffix, obj_type: type | None) -> type:
-        """Resolve *obj_type* against a list of registered types.
-
-        Resolution strategy:
-
-        1. If *obj_type* is ``None``, return the **last** registered type
-           (the default / catch-all).
-        2. If *obj_type* is an exact match, return it.
-        3. If *obj_type* is a subclass of a registered type, return that
-           registered superclass.
-        4. Otherwise raise :class:`TypeError`.
-
-        Parameters
-        ----------
-        suffix
-            Canonical file extension used to look up registered types.
-        obj_type
-            The desired type, or ``None`` to get the default.
-
-        Returns
-        -------
-        type
-            The matching registered type.
-
-        Raises
-        ------
-        TypeError
-            If no registered type matches *obj_type*.
-
-        """
         registered_obj_types = cls._obj_types[suffix]
         if obj_type is None:
             return registered_obj_types[-1]
@@ -224,21 +172,16 @@ class IORegistry:
     def _get_handler(
         cls, suffix: Suffix, obj_type: type | None
     ) -> typing.Callable:
-        """Return the I/O callable for *suffix* and *obj_type*.
-
-        Resolves aliases and object-type fallback before look-up.
-
-        """
         suffix = cls._resolve_suffix(suffix)
         obj_type = cls._resolve_obj_type(suffix, obj_type)
         return cls._handlers[(suffix, obj_type)]
 
 
-class LoaderRegistry(IORegistry):
+class _LoaderRegistry(_IORegistry):
     """Registry of loader functions (file → Python object).
 
-    Each entry is keyed by ``(suffix, obj_type)`` and must conform to the
-    :class:`Loader` protocol.  Use :meth:`get_loader` to retrieve a loader.
+    This is an internal implementation detail.  Use the module-level
+    functions :func:`register_loader` and :func:`get_loader` instead.
 
     """
 
@@ -261,18 +204,17 @@ class LoaderRegistry(IORegistry):
 
         Returns
         -------
-        Loader
             A callable ``(path, **options) -> obj``.
 
         """
         return cls._get_handler(suffix=suffix, obj_type=obj_type)
 
 
-class DumperRegistry(IORegistry):
+class _DumperRegistry(_IORegistry):
     """Registry of dumper functions (Python object → file).
 
-    Each entry is keyed by ``(suffix, obj_type)`` and must conform to the
-    :class:`Dumper` protocol.  Use :meth:`get_dumper` to retrieve a dumper.
+    This is an internal implementation detail.  Use the module-level
+    functions :func:`register_dumper` and :func:`get_dumper` instead.
 
     """
 
@@ -292,23 +234,152 @@ class DumperRegistry(IORegistry):
 
         Returns
         -------
-        Dumper
             A callable ``(obj, path, **options) -> None``.
 
         """
         return cls._get_handler(suffix, obj_type)
 
 
-@LoaderRegistry.register(".csv", pd.DataFrame)
-def load_csv_as_pandas(
+# Public API – module-level convenience functions
+def register_suffix_alias(suffix: Suffix, suffix_alias: SuffixAlias) -> None:
+    """Register an alternative extension that maps to a canonical suffix.
+
+    After registration, any call to :func:`get_loader` or :func:`get_dumper`
+    with *suffix_alias* will resolve to the handlers registered for *suffix*.
+
+    Parameters
+    ----------
+    suffix
+        The canonical suffix, e.g. ``".pkl"``.
+    suffix_alias
+        The alternative extension, e.g. ``".pickle"``.
+
+    Examples
+    --------
+    >>> register_suffix_alias(suffix=".yaml", suffix_alias=".conf")
+
+    """
+    _IORegistry.register_suffix_alias(suffix, suffix_alias)
+
+
+def register_loader(
+    suffix: Suffix, obj_type: type
+) -> typing.Callable[[Loader[typing.Any]], Loader[typing.Any]]:
+    """Decorator that registers a loader for *suffix* and *obj_type*.
+
+    The decorated function must conform to the :class:`Loader` protocol:
+    ``(path, **options) -> obj``.
+
+    Parameters
+    ----------
+    suffix
+        Canonical file extension, e.g. ``".csv"``.
+    obj_type
+        The Python type this loader produces.
+
+    Returns
+    -------
+        A decorator that records the wrapped function in the loader registry.
+
+    Examples
+    --------
+    >>> @register_loader(".csv", pd.DataFrame)
+    ... def load_csv(path, **options):
+    ...     return pd.read_csv(path, **options)
+
+    """
+    return _LoaderRegistry.register(suffix, obj_type)
+
+
+def register_dumper(
+    suffix: Suffix, obj_type: type
+) -> typing.Callable[[Dumper[typing.Any]], Dumper[typing.Any]]:
+    """Decorator that registers a dumper for *suffix* and *obj_type*.
+
+    The decorated function must conform to the :class:`Dumper` protocol:
+    ``(obj, path, **options) -> None``.
+
+    Parameters
+    ----------
+    suffix
+        Canonical file extension, e.g. ``".csv"``.
+    obj_type
+        The Python type this dumper accepts.
+
+    Returns
+    -------
+        A decorator that records the wrapped function in the dumper registry.
+
+    Examples
+    --------
+    >>> @register_dumper(".csv", pd.DataFrame)
+    ... def dump_csv(obj, path, **options):
+    ...     obj.to_csv(path, **options)
+
+    """
+    return _DumperRegistry.register(suffix, obj_type)
+
+
+def get_loader(
+    suffix: Suffix, obj_type: type | None = None
+) -> Loader[typing.Any]:
+    """Return a loader for *suffix*, optionally narrowed by *obj_type*.
+
+    Parameters
+    ----------
+    suffix
+        File extension (canonical or alias).
+    obj_type
+        Desired return type.  If ``None``, the default (catch-all) loader
+        for *suffix* is returned.
+
+    Returns
+    -------
+        A callable ``(path, **options) -> obj``.
+
+    Examples
+    --------
+    >>> loader = get_loader(".json")
+    >>> data = loader("path/to/data.json")
+
+    """
+    return _LoaderRegistry.get_loader(suffix=suffix, obj_type=obj_type)
+
+
+def get_dumper(suffix: Suffix, obj_type: type) -> Dumper[typing.Any]:
+    """Return a dumper for *suffix* and *obj_type*.
+
+    Parameters
+    ----------
+    suffix
+        File extension (canonical or alias).
+    obj_type
+        Type of the object to serialise.
+
+    Returns
+    -------
+        A callable ``(obj, path, **options) -> None``.
+
+    Examples
+    --------
+    >>> dumper = get_dumper(".json", obj_type=object)
+    >>> dumper({"key": "value"}, "path/to/output.json")
+
+    """
+    return _DumperRegistry.get_dumper(suffix, obj_type)
+
+
+# Built-in loaders and dumpers
+@register_loader(".csv", pd.DataFrame)
+def _load_csv_as_pandas(
     path: pathlib.Path, **options: typing.Any
 ) -> pd.DataFrame:
     """Load a CSV file into a :class:`~pandas.DataFrame`."""
     return pd.read_csv(path, **options)
 
 
-@DumperRegistry.register(".csv", pd.DataFrame)
-def dump_csv_from_pandas(
+@register_dumper(".csv", pd.DataFrame)
+def _dump_csv_from_pandas(
     obj: pd.DataFrame, path: pathlib.Path, **options: typing.Any
 ) -> None:
     """Write a :class:`~pandas.DataFrame` to a CSV file (without index)."""
@@ -316,8 +387,8 @@ def dump_csv_from_pandas(
     obj.to_csv(path, **options)
 
 
-@LoaderRegistry.register(".parquet", pd.DataFrame)
-def load_parquet_as_pandas(
+@register_loader(".parquet", pd.DataFrame)
+def _load_parquet_as_pandas(
     path: pathlib.Path, **options: typing.Any
 ) -> pd.DataFrame:
     """Load a Parquet file into a :class:`~pandas.DataFrame`."""
@@ -325,8 +396,8 @@ def load_parquet_as_pandas(
     return pd.read_parquet(path, **options)
 
 
-@DumperRegistry.register(".parquet", pd.DataFrame)
-def dump_parquet_from_pandas(
+@register_dumper(".parquet", pd.DataFrame)
+def _dump_parquet_from_pandas(
     obj: pd.DataFrame, path: pathlib.Path, **options: typing.Any
 ) -> None:
     """Write a :class:`~pandas.DataFrame` to a Parquet file."""
@@ -334,59 +405,59 @@ def dump_parquet_from_pandas(
     obj.to_parquet(path, **options)
 
 
-@LoaderRegistry.register(".json", object)
-def load_json(path: pathlib.Path, **options: typing.Any) -> object:
+@register_loader(".json", object)
+def _load_json(path: pathlib.Path, **options: typing.Any) -> object:
     """Load a JSON file and return the deserialised Python object."""
     with open(path, "r") as f:
         return json.load(f, **options)
 
 
-@DumperRegistry.register(".json", object)
-def dump_json(obj: object, path: pathlib.Path, **options: typing.Any) -> None:
+@register_dumper(".json", object)
+def _dump_json(obj: object, path: pathlib.Path, **options: typing.Any) -> None:
     """Serialise a Python object to a JSON file."""
     with open(path, "w") as f:
         json.dump(obj, f, **options)
 
 
-@LoaderRegistry.register(".yaml", object)
-def load_yaml(path: pathlib.Path, **options: typing.Any) -> object:
+@register_loader(".yaml", object)
+def _load_yaml(path: pathlib.Path, **options: typing.Any) -> object:
     """Load a YAML file (using ``SafeLoader`` by default)."""
     options = dict(Loader=yaml.SafeLoader) | options
     with open(path, "r") as f:
         return yaml.load(f, **options)
 
 
-@DumperRegistry.register(".yaml", object)
-def dump_yaml(obj: object, path: pathlib.Path, **options: typing.Any) -> None:
+@register_dumper(".yaml", object)
+def _dump_yaml(obj: object, path: pathlib.Path, **options: typing.Any) -> None:
     """Write a Python object to a YAML file (using ``SafeDumper`` by default)."""
     options = dict(Dumper=yaml.SafeDumper) | options
     with open(path, "w") as f:
         yaml.dump(obj, f, **options)
 
 
-@LoaderRegistry.register(".toml", dict)
-def load_toml(path: pathlib.Path, **options: typing.Any) -> dict:
+@register_loader(".toml", dict)
+def _load_toml(path: pathlib.Path, **options: typing.Any) -> dict:
     """Load a TOML file and return a plain ``dict``."""
     with open(path, "rb") as f:
         return tomllib.load(f, **options)
 
 
-@DumperRegistry.register(".toml", dict)
-def dump_toml(obj: dict, path: pathlib.Path, **options: typing.Any) -> None:
+@register_dumper(".toml", dict)
+def _dump_toml(obj: dict, path: pathlib.Path, **options: typing.Any) -> None:
     """Write a ``dict`` to a TOML file."""
     with open(path, "wb") as f:
         tomli_w.dump(obj, f, **options)
 
 
-@LoaderRegistry.register(".pkl", object)
-def load_pickle(path: pathlib.Path, **options: typing.Any) -> typing.Any:
+@register_loader(".pkl", object)
+def _load_pickle(path: pathlib.Path, **options: typing.Any) -> typing.Any:
     """Deserialise any object from a pickle file (via :mod:`dill`)."""
     with open(path, "rb") as f:
         return dill.load(f, **options)
 
 
-@DumperRegistry.register(".pkl", object)
-def dump_pickle(
+@register_dumper(".pkl", object)
+def _dump_pickle(
     obj: typing.Any, path: pathlib.Path, **options: typing.Any
 ) -> None:
     """Serialise any object to a pickle file (via :mod:`dill`)."""
@@ -394,5 +465,6 @@ def dump_pickle(
         dill.dump(obj, f, **options)
 
 
-IORegistry.register_suffix_alias(suffix=".pkl", suffix_alias=".pickle")
-IORegistry.register_suffix_alias(suffix=".yaml", suffix_alias=".yml")
+# Built-in suffix aliases
+register_suffix_alias(suffix=".pkl", suffix_alias=".pickle")
+register_suffix_alias(suffix=".yaml", suffix_alias=".yml")
