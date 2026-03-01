@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pplkit.data.io import (
+from pplkit.io import (
     DumperRegistry,
     IORegistry,
     LoaderRegistry,

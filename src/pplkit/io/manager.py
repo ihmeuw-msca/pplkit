@@ -1,12 +1,12 @@
-"""High-level data interface for reading and writing files by directory key.
+"""High-level I/O manager for reading and writing files by directory key.
 
-:class:`DataInterface` pairs named directory paths with the registry-based
-I/O layer in :mod:`pplkit.data.io` so that callers can load and dump data
-with a single call, e.g.
+:class:`IOManager` pairs named directory paths with the registry-based
+I/O layer in :mod:`pplkit.io.registry` so that callers can load and dump
+data with a single call, e.g.
 
->>> dataif = DataInterface(raw="/data/raw", output="/data/output")
->>> dataif.dump(my_df, "results.csv", key="output")
->>> df = dataif.load("results.csv", key="output")
+>>> iom = IOManager(raw="/data/raw", output="/data/output")
+>>> iom.dump(my_df, "results.csv", key="output")
+>>> df = iom.load("results.csv", key="output")
 
 File format is determined automatically from the file extension.
 
@@ -16,7 +16,7 @@ import os
 import pathlib
 import typing
 
-from pplkit.data.io import DumperRegistry, LoaderRegistry
+from pplkit.io.registry import DumperRegistry, LoaderRegistry
 
 type PathLike = str | os.PathLike[str]
 """A string or :class:`os.PathLike` that can be coerced to a
@@ -25,7 +25,7 @@ type PathLike = str | os.PathLike[str]
 """
 
 
-class DataInterface:
+class IOManager:
     """Manage named directories and automatically read/write data by extension.
 
     Directories are registered by name and accessed via bracket notation.
@@ -40,11 +40,11 @@ class DataInterface:
 
     Examples
     --------
-    >>> dataif = DataInterface(raw="/data/raw", output="/data/output")
-    >>> dataif["raw"]
+    >>> iom = IOManager(raw="/data/raw", output="/data/output")
+    >>> iom["raw"]
     PosixPath('/data/raw')
-    >>> dataif.dump(obj, "file.csv", key="raw")
-    >>> dataif.load("file.csv", key="raw")
+    >>> iom.dump(obj, "file.csv", key="raw")
+    >>> iom.load("file.csv", key="raw")
 
     """
 
@@ -198,7 +198,7 @@ class DataInterface:
         """
         if not isinstance(key, str):
             raise TypeError(
-                f"DataInterface key must be a 'str', not {type(key).__name__!r}"
+                f"IOManager key must be a 'str', not {type(key).__name__!r}"
             )
         self._paths[key] = pathlib.Path(value)
 
@@ -218,12 +218,12 @@ class DataInterface:
         return len(self._paths)
 
     def __repr__(self) -> str:
-        """Return a concise, eval-style representation of the interface.
+        """Return a concise, eval-style representation of the manager.
 
         Examples
         --------
-        >>> DataInterface(raw='/data/raw', output='/data/output')
-        DataInterface(raw='/data/raw', output='/data/output')
+        >>> IOManager(raw='/data/raw', output='/data/output')
+        IOManager(raw='/data/raw', output='/data/output')
 
         """
         items = ", ".join(
