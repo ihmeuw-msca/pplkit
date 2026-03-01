@@ -16,7 +16,7 @@ dependencies = ["dill", "pyyaml", "pandas", "pyarrow", "tomli-w"]
 
 [project.optional-dependencies]
 test = ["pytest", "numpy"]
-docs = ["sphinx", "sphinx-autodoc-typehints", "furo"]
+docs = ["sphinx", "sphinx-autodoc-typehints", "furo", "catppuccin[pygments]"]
 
 [project.urls]
 github = "https://github.com/ihmeuw-msca/pplkit"

@@ -1,7 +1,12 @@
-/* reduce the size of the main text */
+/* ============================================================
+   Catppuccin-themed custom styles for Furo
+   Light = Latte  |  Dark = Macchiato
+   ============================================================ */
+
+/* -- Typography ---------------------------------------------- */
 
 p {
-  font-size: 0.95rem;
+    font-size: 0.95rem;
 }
 
 h1,
@@ -10,11 +15,480 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 500;
+    font-weight: 500;
 }
 
 .sidebar-brand-text {
-  font-size: 1rem;
-  font-weight: 500;
-  margin: auto;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: auto;
+}
+
+/* -- Scrollbars (Macchiato dark / Latte light) --------------- */
+
+/* Light mode scrollbar */
+:root {
+    scrollbar-color: #acb0be #eff1f5;
+}
+
+:root::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+:root::-webkit-scrollbar-track {
+    background: #eff1f5;
+}
+
+:root::-webkit-scrollbar-thumb {
+    background: #acb0be;
+    border-radius: 4px;
+}
+
+:root::-webkit-scrollbar-thumb:hover {
+    background: #9ca0b0;
+}
+
+/* Dark mode scrollbar */
+@media (prefers-color-scheme: dark) {
+    :root {
+        scrollbar-color: #5b6078 #1e2030;
+    }
+
+    :root::-webkit-scrollbar-track {
+        background: #1e2030;
+    }
+
+    :root::-webkit-scrollbar-thumb {
+        background: #5b6078;
+    }
+
+    :root::-webkit-scrollbar-thumb:hover {
+        background: #6e738d;
+    }
+}
+
+/* Furo uses body[data-theme] for explicit toggle */
+body[data-theme="dark"] {
+    scrollbar-color: #5b6078 #1e2030;
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #1e2030;
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #5b6078;
+}
+
+body[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #6e738d;
+}
+
+body[data-theme="light"] {
+    scrollbar-color: #acb0be #eff1f5;
+}
+
+body[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #eff1f5;
+}
+
+body[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: #acb0be;
+}
+
+body[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+    background: #9ca0b0;
+}
+
+/* -- Code blocks --------------------------------------------- */
+
+/* Light (Latte) */
+body:not([data-theme="dark"]) pre {
+    background: #e6e9ef !important;
+    color: #4c4f69 !important;
+    border: 1px solid #ccd0da;
+    border-radius: 6px;
+}
+
+body:not([data-theme="dark"]) code.literal {
+    background: #e6e9ef;
+    color: #179299;
+    border: none;
+    border-radius: 4px;
+    padding: 1px 4px;
+}
+
+/* Dark (Macchiato) */
+body[data-theme="dark"] pre {
+    background: #24273a !important;
+    color: #cad3f5 !important;
+    border: 1px solid #363a4f;
+    border-radius: 6px;
+}
+
+body[data-theme="dark"] code.literal {
+    background: #24273a;
+    color: #8bd5ca;
+    border: none;
+    border-radius: 4px;
+    padding: 1px 4px;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) pre {
+        background: #24273a !important;
+        color: #cad3f5 !important;
+        border: 1px solid #363a4f;
+        border-radius: 6px;
+    }
+
+    body:not([data-theme="light"]) code.literal {
+        background: #24273a;
+        color: #8bd5ca;
+        border: none;
+        border-radius: 4px;
+        padding: 1px 4px;
+    }
+}
+
+/* -- Admonitions --------------------------------------------- */
+
+/* Note / See Also — Latte Blue / Macchiato Blue */
+body:not([data-theme="dark"]) .admonition.note,
+body:not([data-theme="dark"]) .admonition.seealso {
+    border-left-color: #1e66f5;
+    background: rgba(30, 102, 245, 0.08);
+}
+
+body[data-theme="dark"] .admonition.note,
+body[data-theme="dark"] .admonition.seealso {
+    border-left-color: #8aadf4;
+    background: rgba(138, 173, 244, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .admonition.note,
+    body:not([data-theme="light"]) .admonition.seealso {
+        border-left-color: #8aadf4;
+        background: rgba(138, 173, 244, 0.08);
+    }
+}
+
+/* Tip / Hint — Latte Teal / Macchiato Teal */
+body:not([data-theme="dark"]) .admonition.tip,
+body:not([data-theme="dark"]) .admonition.hint {
+    border-left-color: #179299;
+    background: rgba(23, 146, 153, 0.08);
+}
+
+body[data-theme="dark"] .admonition.tip,
+body[data-theme="dark"] .admonition.hint {
+    border-left-color: #8bd5ca;
+    background: rgba(139, 213, 202, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .admonition.tip,
+    body:not([data-theme="light"]) .admonition.hint {
+        border-left-color: #8bd5ca;
+        background: rgba(139, 213, 202, 0.08);
+    }
+}
+
+/* Warning / Caution — Latte Yellow / Macchiato Yellow */
+body:not([data-theme="dark"]) .admonition.warning,
+body:not([data-theme="dark"]) .admonition.caution {
+    border-left-color: #df8e1d;
+    background: rgba(223, 142, 29, 0.08);
+}
+
+body[data-theme="dark"] .admonition.warning,
+body[data-theme="dark"] .admonition.caution {
+    border-left-color: #eed49f;
+    background: rgba(238, 212, 159, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .admonition.warning,
+    body:not([data-theme="light"]) .admonition.caution {
+        border-left-color: #eed49f;
+        background: rgba(238, 212, 159, 0.08);
+    }
+}
+
+/* Danger / Error — Latte Red / Macchiato Red */
+body:not([data-theme="dark"]) .admonition.danger,
+body:not([data-theme="dark"]) .admonition.error {
+    border-left-color: #d20f39;
+    background: rgba(210, 15, 57, 0.08);
+}
+
+body[data-theme="dark"] .admonition.danger,
+body[data-theme="dark"] .admonition.error {
+    border-left-color: #ed8796;
+    background: rgba(237, 135, 150, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .admonition.danger,
+    body:not([data-theme="light"]) .admonition.error {
+        border-left-color: #ed8796;
+        background: rgba(237, 135, 150, 0.08);
+    }
+}
+
+/* Important — Latte Mauve / Macchiato Mauve */
+body:not([data-theme="dark"]) .admonition.important {
+    border-left-color: #8839ef;
+    background: rgba(136, 57, 239, 0.08);
+}
+
+body[data-theme="dark"] .admonition.important {
+    border-left-color: #c6a0f6;
+    background: rgba(198, 160, 246, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .admonition.important {
+        border-left-color: #c6a0f6;
+        background: rgba(198, 160, 246, 0.08);
+    }
+}
+
+/* Admonition title styling */
+.admonition > .admonition-title {
+    font-weight: 600;
+}
+
+/* -- Sidebar ------------------------------------------------- */
+
+/* Light (Latte) */
+body:not([data-theme="dark"]) .sidebar-drawer {
+    border-right: none;
+}
+
+body:not([data-theme="dark"]) .sidebar-tree .current-page > .reference {
+    font-weight: 600;
+}
+
+/* Dark (Macchiato) */
+body[data-theme="dark"] .sidebar-drawer {
+    border-right: none;
+}
+
+body[data-theme="dark"] .sidebar-tree .current-page > .reference {
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .sidebar-drawer {
+        border-right: none;
+    }
+
+    body:not([data-theme="light"]) .sidebar-tree .current-page > .reference {
+        font-weight: 600;
+    }
+}
+
+/* -- Search -------------------------------------------------- */
+
+/* Sidebar search placeholder — Light (Latte) */
+body:not([data-theme="dark"]) .sidebar-search::placeholder {
+    color: #9ca0b0;
+    opacity: 1;
+}
+
+/* Sidebar search placeholder — Dark (Macchiato) */
+body[data-theme="dark"] .sidebar-search::placeholder {
+    color: #6e738d;
+    opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .sidebar-search::placeholder {
+        color: #6e738d;
+        opacity: 1;
+    }
+}
+
+/* Light (Latte) */
+body:not([data-theme="dark"]) .search input[type="search"] {
+    background: #e6e9ef;
+    border: 1px solid #ccd0da;
+    color: #4c4f69;
+    border-radius: 6px;
+}
+
+body:not([data-theme="dark"]) .search input[type="search"]:focus {
+    border-color: #1e66f5;
+    box-shadow: 0 0 0 1px #1e66f5;
+}
+
+body:not([data-theme="dark"]) .search .context {
+    color: #6c6f85;
+}
+
+/* Dark (Macchiato) */
+body[data-theme="dark"] .search input[type="search"] {
+    background: #24273a;
+    border: 1px solid #363a4f;
+    color: #cad3f5;
+    border-radius: 6px;
+}
+
+body[data-theme="dark"] .search input[type="search"]:focus {
+    border-color: #8aadf4;
+    box-shadow: 0 0 0 1px #8aadf4;
+}
+
+body[data-theme="dark"] .search .context {
+    color: #a5adcb;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .search input[type="search"] {
+        background: #24273a;
+        border: 1px solid #363a4f;
+        color: #cad3f5;
+        border-radius: 6px;
+    }
+
+    body:not([data-theme="light"]) .search input[type="search"]:focus {
+        border-color: #8aadf4;
+        box-shadow: 0 0 0 1px #8aadf4;
+    }
+
+    body:not([data-theme="light"]) .search .context {
+        color: #a5adcb;
+    }
+}
+
+/* -- Tables -------------------------------------------------- */
+
+/* Light (Latte) */
+body:not([data-theme="dark"]) table.docutils {
+    border-color: #ccd0da;
+}
+
+body:not([data-theme="dark"]) table.docutils thead {
+    background: #e6e9ef;
+}
+
+body:not([data-theme="dark"]) table.docutils td,
+body:not([data-theme="dark"]) table.docutils th {
+    border-color: #ccd0da;
+}
+
+/* Dark (Macchiato) */
+body[data-theme="dark"] table.docutils {
+    border-color: #363a4f;
+}
+
+body[data-theme="dark"] table.docutils thead {
+    background: #24273a;
+}
+
+body[data-theme="dark"] table.docutils td,
+body[data-theme="dark"] table.docutils th {
+    border-color: #363a4f;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) table.docutils {
+        border-color: #363a4f;
+    }
+
+    body:not([data-theme="light"]) table.docutils thead {
+        background: #24273a;
+    }
+
+    body:not([data-theme="light"]) table.docutils td,
+    body:not([data-theme="light"]) table.docutils th {
+        border-color: #363a4f;
+    }
+}
+
+/* -- Links --------------------------------------------------- */
+
+/* Light (Latte): hover uses Sky */
+body:not([data-theme="dark"]) a:hover,
+body:not([data-theme="dark"]) a:visited:hover {
+    color: #04a5e5;
+}
+
+body:not([data-theme="dark"]) .related-pages a:hover .page-info .title {
+    color: #04a5e5;
+}
+
+/* Dark (Macchiato): hover uses Sky */
+body[data-theme="dark"] a:hover,
+body[data-theme="dark"] a:visited:hover {
+    color: #91d7e3;
+}
+
+body[data-theme="dark"] .related-pages a:hover .page-info .title {
+    color: #91d7e3;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) a:hover,
+    body:not([data-theme="light"]) a:visited:hover {
+        color: #91d7e3;
+    }
+
+    body:not([data-theme="light"]) .related-pages a:hover .page-info .title {
+        color: #91d7e3;
+    }
+}
+
+/* -- API / Autodoc signatures -------------------------------- */
+
+body:not([data-theme="dark"]) dt:target,
+body:not([data-theme="dark"]) span.highlighted {
+    background-color: rgba(223, 142, 29, 0.15);
+}
+
+body[data-theme="dark"] dt:target,
+body[data-theme="dark"] span.highlighted {
+    background-color: rgba(238, 212, 159, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) dt:target,
+    body:not([data-theme="light"]) span.highlighted {
+        background-color: rgba(238, 212, 159, 0.15);
+    }
+}
+
+/* -- Footer -------------------------------------------------- */
+
+body:not([data-theme="dark"]) .bottom-of-page {
+    color: #6c6f85;
+}
+
+body[data-theme="dark"] .bottom-of-page {
+    color: #a5adcb;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) .bottom-of-page {
+        color: #a5adcb;
+    }
+}
+
+/* -- Horizontal rules & borders ------------------------------ */
+
+body:not([data-theme="dark"]) hr {
+    border-color: #ccd0da;
+}
+
+body[data-theme="dark"] hr {
+    border-color: #363a4f;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) hr {
+        border-color: #363a4f;
+    }
 }
