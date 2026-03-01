@@ -4,7 +4,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pplkit.data.io import CSVIO, JSONIO, TOMLIO, YAMLIO, ParquetIO, PickleIO
+from pplkit.data.io import (
+    DumperRegistry,
+    IORegistry,
+    LoaderRegistry,
+)
 
 
 @pytest.fixture
@@ -12,56 +16,177 @@ def data() -> dict[str, list[int]]:
     return {"a": [1, 2, 3], "b": [4, 5, 6]}
 
 
-def test_csvio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
-    df = pd.DataFrame(data)
-    CSVIO.dump(df, tmp_path / "file.csv")
-    loaded_data = CSVIO.load(tmp_path / "file.csv")
-
-    for key in ["a", "b"]:
-        assert np.allclose(data[key], loaded_data[key])
+# ---------------------------------------------------------------------------
+# Suffix alias resolution
+# ---------------------------------------------------------------------------
 
 
-def test_jsonio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
-    JSONIO.dump(data, tmp_path / "file.json")
-    loaded_data = JSONIO.load(tmp_path / "file.json")
+class TestSuffixAlias:
+    """Tests for ``IORegistry._resolve_suffix`` and alias registration."""
 
-    for key in ["a", "b"]:
-        assert np.allclose(data[key], loaded_data[key])
+    def test_resolve_known_alias_pickle(self) -> None:
+        assert IORegistry._resolve_suffix(".pickle") == ".pkl"
 
+    def test_resolve_known_alias_yml(self) -> None:
+        assert IORegistry._resolve_suffix(".yml") == ".yaml"
 
-def test_yamlio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
-    YAMLIO.dump(data, tmp_path / "file.yaml")
-    loaded_data = YAMLIO.load(tmp_path / "file.yaml")
+    def test_resolve_canonical_suffix(self) -> None:
+        assert IORegistry._resolve_suffix(".csv") == ".csv"
+        assert IORegistry._resolve_suffix(".json") == ".json"
 
-    for key in ["a", "b"]:
-        assert np.allclose(data[key], loaded_data[key])
-
-
-def test_parquetio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
-    df = pd.DataFrame(data)
-    ParquetIO.dump(df, tmp_path / "file.parquet")
-    loaded_data = ParquetIO.load(tmp_path / "file.parquet")
-
-    for key in ["a", "b"]:
-        assert np.allclose(data[key], loaded_data[key])
+    def test_resolve_unknown_suffix_returns_as_is(self) -> None:
+        assert IORegistry._resolve_suffix(".xyz") == ".xyz"
 
 
-def test_pickleio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
-    PickleIO.dump(data, tmp_path / "file.pkl")
-    loaded_data = PickleIO.load(tmp_path / "file.pkl")
-
-    for key in ["a", "b"]:
-        assert np.allclose(data[key], loaded_data[key])
+# ---------------------------------------------------------------------------
+# Object-type resolution
+# ---------------------------------------------------------------------------
 
 
-def test_tomlio(data: dict[str, list[int]], tmp_path: pathlib.Path) -> None:
-    TOMLIO.dump(data, tmp_path / "file.toml")
-    loaded_data = TOMLIO.load(tmp_path / "file.toml")
+class TestResolveObjType:
+    """Tests for ``IORegistry._resolve_obj_type``."""
 
-    for key in ["a", "b"]:
-        assert np.allclose(data[key], loaded_data[key])
+    def test_exact_match(self) -> None:
+        assert (
+            LoaderRegistry._resolve_obj_type(".csv", pd.DataFrame)
+            is pd.DataFrame
+        )
+
+    def test_subclass_fallback(self) -> None:
+        assert LoaderRegistry._resolve_obj_type(".pkl", dict) is object
+
+    def test_none_returns_last_registered(self) -> None:
+        """When *obj_type* is ``None`` the last (default) entry is returned."""
+        assert LoaderRegistry._resolve_obj_type(".json", None) is object
+
+    def test_no_match_raises(self) -> None:
+        with pytest.raises(TypeError, match="Cannot resolve"):
+            LoaderRegistry._resolve_obj_type(".csv", int)
 
 
-def test_load_missing_file(tmp_path: pathlib.Path) -> None:
-    with pytest.raises(FileNotFoundError):
-        JSONIO.load(tmp_path / "nonexistent.json")
+# ---------------------------------------------------------------------------
+# LoaderRegistry
+# ---------------------------------------------------------------------------
+
+
+class TestLoaderRegistry:
+    """Tests for ``LoaderRegistry.get_loader``."""
+
+    def test_get_default_loader(self) -> None:
+        loader = LoaderRegistry.get_loader(".csv")
+        assert callable(loader)
+
+    def test_get_loader_by_obj_type(self) -> None:
+        loader = LoaderRegistry.get_loader(".csv", obj_type=pd.DataFrame)
+        assert callable(loader)
+
+    def test_get_loader_missing_obj_type_raises(self) -> None:
+        with pytest.raises(TypeError, match="Cannot resolve"):
+            LoaderRegistry.get_loader(".csv", obj_type=int)
+
+    def test_loader_obj_types_csv(self) -> None:
+        obj_types = LoaderRegistry._obj_types[".csv"]
+        assert pd.DataFrame in obj_types
+
+    def test_loader_obj_types_json_has_object(self) -> None:
+        obj_types = LoaderRegistry._obj_types[".json"]
+        assert object in obj_types
+
+
+# ---------------------------------------------------------------------------
+# DumperRegistry
+# ---------------------------------------------------------------------------
+
+
+class TestDumperRegistry:
+    """Tests for ``DumperRegistry.get_dumper``."""
+
+    def test_get_dumper(self) -> None:
+        dumper = DumperRegistry.get_dumper(".csv", pd.DataFrame)
+        assert callable(dumper)
+
+    def test_get_dumper_via_subclass_resolution(self) -> None:
+        dumper = DumperRegistry.get_dumper(".pkl", dict)
+        assert callable(dumper)
+
+    def test_get_dumper_missing_obj_type_raises(self) -> None:
+        with pytest.raises(TypeError, match="Cannot resolve"):
+            DumperRegistry.get_dumper(".csv", int)
+
+
+# ---------------------------------------------------------------------------
+# Round-trip integration tests
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "suffix", [".csv", ".pkl", ".yaml", ".parquet", ".json", ".toml"]
+)
+class TestLoaderDumperRoundTrip:
+    """Dump then load for every registered format and verify data integrity."""
+
+    def test_round_trip(
+        self,
+        data: dict[str, list[int]],
+        suffix: str,
+        tmp_path: pathlib.Path,
+    ) -> None:
+        path = tmp_path / f"data{suffix}"
+        obj = pd.DataFrame(data) if suffix in {".csv", ".parquet"} else data
+
+        dumper = DumperRegistry.get_dumper(suffix, type(obj))
+        dumper(obj, path)
+
+        loader = LoaderRegistry.get_loader(suffix)
+        loaded_data = loader(path)
+
+        for key in ["a", "b"]:
+            assert np.allclose(data[key], loaded_data[key])
+
+
+class TestSuffixAliasRoundTrip:
+    """Verify that suffix aliases work end-to-end through dump/load."""
+
+    def test_pickle_alias(
+        self, data: dict[str, list[int]], tmp_path: pathlib.Path
+    ) -> None:
+        path = tmp_path / "data.pickle"
+        resolved = IORegistry._resolve_suffix(path.suffix)
+
+        dumper = DumperRegistry.get_dumper(resolved, object)
+        dumper(data, path)
+
+        loader = LoaderRegistry.get_loader(resolved)
+        loaded_data = loader(path)
+
+        for key in ["a", "b"]:
+            assert np.allclose(data[key], loaded_data[key])
+
+    def test_yml_alias(
+        self, data: dict[str, list[int]], tmp_path: pathlib.Path
+    ) -> None:
+        path = tmp_path / "data.yml"
+        resolved = IORegistry._resolve_suffix(path.suffix)
+
+        dumper = DumperRegistry.get_dumper(resolved, object)
+        dumper(data, path)
+
+        loader = LoaderRegistry.get_loader(resolved)
+        loaded_data = loader(path)
+
+        for key in ["a", "b"]:
+            assert np.allclose(data[key], loaded_data[key])
+
+
+# ---------------------------------------------------------------------------
+# Edge cases
+# ---------------------------------------------------------------------------
+
+
+class TestLoadMissingFile:
+    """Loading a nonexistent file should surface a ``FileNotFoundError``."""
+
+    def test_missing_file(self, tmp_path: pathlib.Path) -> None:
+        loader = LoaderRegistry.get_loader(".json")
+        with pytest.raises(FileNotFoundError):
+            loader(tmp_path / "nonexistent.json")
